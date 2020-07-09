@@ -33,8 +33,11 @@ public class FileGetterServlet extends HttpServlet
    @Override
    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
    {
-      RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/existingFileView.jsp");
-      dispatcher.forward(request, response);
+	   String jspPath = "/WEB-INF/views/existingFileView.jsp";
+	   File archiveDir = new File(m_archivePath);
+	   if (archiveDir.listFiles().length == 0) jspPath = "/WEB-INF/views/nonExistingFileView.jsp";
+       RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher(jspPath);
+       dispatcher.forward(request, response);
    }
  
    @Override
@@ -50,7 +53,7 @@ public class FileGetterServlet extends HttpServlet
 	   String entryCountLine = AppUtil.getNextStringFromInputStream(requestIn, m_lengthOfSizeLine);
 	   int entryCount = Integer.parseInt(entryCountLine);
 	   
-	   File archive = new File (m_archivePath + fileName);
+	   File archive = new File (m_archivePath + "\\" + fileName);
 	   archive.createNewFile();
 	   try (BufferedOutputStream bufOut = new BufferedOutputStream(new FileOutputStream(archive));
 	        ZipOutputStream zout = new ZipOutputStream (bufOut))
