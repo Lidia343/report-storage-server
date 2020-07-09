@@ -7,6 +7,15 @@
       	<title>Просмотр доступного файла</title>
    </head>
    <body>
-    	<div><h1 align = 'center'><em><small>Загрузить архив, содержащий отчёт об ошибке в коде САПР и информацию о системе пользователя:</small></em></h1></div><hr>
+   		<jsp:include page="logoutView.jsp"></jsp:include>
+   
+    	<div><h1 align = 'center'><em><small>Просмотр доступных для загрузки архивов, содержащих отчёты об ошибках в коде САПР и информацию о системе пользователя</small></em></h1></div><hr>
+    	
+    	 <form action="${pageContext.request.contextPath}/file/upload" method = "get"
+	         enctype = "multipart/form-data">
+	         <input type = "file" name = "file" size = "75"/>
+	         <br/>
+	         <input type = "submit" value = "Загрузить"/>
+         </form>
    </body>
 </html>
