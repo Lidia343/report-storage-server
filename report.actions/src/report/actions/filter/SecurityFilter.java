@@ -18,6 +18,8 @@ import report.actions.util.AppUtil;
 @WebFilter("/*")
 public class SecurityFilter implements Filter 
 {
+	private final String m_token = "4r3rSw4654wyb3aEg4Fqq6454qwEbh6q346qGm8emxgok9E8543e";
+	
     @Override
     public void destroy() 
     {
@@ -41,15 +43,26 @@ public class SecurityFilter implements Filter
         }
         
         HttpServletRequest wrapRequest = request;
-        if (request.getServletPath().contains("/file")) 
+        if (request.getServletPath().contains("/file"))
         {
-            if (loginedUser == null) 
-            {
-                String requestUri = request.getRequestURI();
-                int redirectId = AppUtil.storeRedirectAfterLoginUrl(request.getSession(), requestUri);
-                response.sendRedirect(wrapRequest.getContextPath() + "/login?redirectId=" + redirectId);
-                return;
-            } 
+        	if (loginedUser == null)
+        	{
+        		if (request.getMethod().equals("GET"))
+	            {
+	                String requestUri = request.getRequestURI();
+	                int redirectId = AppUtil.storeRedirectAfterLoginUrl(request.getSession(), requestUri);
+	                response.sendRedirect(wrapRequest.getContextPath() + "/login?redirectId=" + redirectId);
+	                return;
+	            } 
+        		if (request.getMethod().equals("POST"))
+        		{
+        			if (!request.getHeader("Authorization").equals(m_token))
+        			{
+        				   response.sendError(401, "Unauthorized");
+        				   return;
+        			}
+        		}
+        	}
         }
  
         chain.doFilter(wrapRequest, response);
