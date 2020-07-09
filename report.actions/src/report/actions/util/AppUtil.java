@@ -63,6 +63,6 @@ public class AppUtil
        String a_path = System.getProperty("user.home") + "\\reports";
   	   File archiveDir = new File(a_path);
   	   archiveDir.mkdir();
-  	   return a_path += "\\";
+  	   return a_path;
     }
 }
