@@ -1,5 +1,6 @@
 package report.actions.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -55,5 +56,13 @@ public class AppUtil
     		result += Character.toString((char)a_stream.read());
 		}
     	return result;
+    }
+    
+    public static String getReportArchivePath ()
+    {
+       String a_path = System.getProperty("user.home") + "\\reports";
+  	   File archiveDir = new File(a_path);
+  	   archiveDir.mkdir();
+  	   return a_path += "\\";
     }
 }
