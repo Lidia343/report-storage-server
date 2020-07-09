@@ -1,6 +1,7 @@
 package report.actions.servlet;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,12 +22,14 @@ public class FileGetterServlet extends HttpServlet
 {
    private static final long serialVersionUID = 1L;
    private final int m_lengthOfSizeLine = 2;
+   private String m_archivePath = "";
  
-   public FileGetterServlet() 
+   public FileGetterServlet() throws IOException 
    {
       super();
+      m_archivePath = AppUtil.getReportArchivePath();
    }
- 
+   
    @Override
    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
    {
@@ -47,7 +50,9 @@ public class FileGetterServlet extends HttpServlet
 	   String entryCountLine = AppUtil.getNextStringFromInputStream(requestIn, m_lengthOfSizeLine);
 	   int entryCount = Integer.parseInt(entryCountLine);
 	   
-	   try (BufferedOutputStream bufOut = new BufferedOutputStream(new FileOutputStream(fileName));
+	   File archive = new File (m_archivePath + fileName);
+	   archive.createNewFile();
+	   try (BufferedOutputStream bufOut = new BufferedOutputStream(new FileOutputStream(archive));
 	        ZipOutputStream zout = new ZipOutputStream (bufOut))
 	   {
 		   for(int i = 0 ; i < entryCount; i++)
