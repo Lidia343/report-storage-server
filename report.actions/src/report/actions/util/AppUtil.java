@@ -1,5 +1,7 @@
 package report.actions.util;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
  
@@ -45,4 +47,13 @@ public class AppUtil
         return null;
     }
  
+    public static String getNextStringFromInputStream (InputStream a_stream, int a_stringLength) throws IOException
+    {
+    	String result = "";
+    	for (int j = 0; j < a_stringLength; j++)
+		{
+    		result += Character.toString((char)a_stream.read());
+		}
+    	return result;
+    }
 }
