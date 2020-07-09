@@ -4,9 +4,9 @@
 <html>
    <head>
       <meta charset="UTF-8">
-      <title>Нет доступного файла</title>
+      <title>Файлы не найдены</title>
    </head>
    <body>
-    <div><h1 align = 'center'><em><small>Архив не был загружен на сервер.</small></em></h1></div><hr>
+    <div><h1 align = 'center'><em><small>Доступные для загрузки архивы не найдены.</small></em></h1></div><hr>
    </body>
 </html>
