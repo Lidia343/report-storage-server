@@ -7,35 +7,31 @@ import java.util.HashMap;
 import java.util.Map;
  
 import javax.servlet.http.HttpSession;
-
-import report.actions.user.UserAccount;
  
 public class AppUtil 
 {
     private static int REDIRECT_ID = 0;
-    private static final Map<Integer, String> id_uri_map = new HashMap<Integer, String>();
-    private static final Map<String, Integer> uri_id_map = new HashMap<String, Integer>();
+    private static final Map<Integer, String> m_id_uri_map = new HashMap<Integer, String>();
+    private static final Map<String, Integer> m_uri_id_map = new HashMap<String, Integer>();
  
-    public static void storeLoginedUser(HttpSession session, UserAccount loginedUser)
+    public static void storeToken(HttpSession a_session, String a_token)
     {
-        session.setAttribute("loginedUser", loginedUser);
+        a_session.setAttribute("token", a_token);
     }
  
-    public static UserAccount getLoginedUser(HttpSession session) 
+    public static String getToken(HttpSession a_session) 
     {
-        UserAccount loginedUser = (UserAccount) session.getAttribute("loginedUser");
-        return loginedUser;
+        return (String)a_session.getAttribute("token");
     }
  
     public static int storeRedirectAfterLoginUrl(HttpSession session, String requestUri) 
     {
-        Integer id = uri_id_map.get(requestUri);
- 
+        Integer id = m_uri_id_map.get(requestUri);
         if (id == null) 
         {
             id = REDIRECT_ID++;
-            uri_id_map.put(requestUri, id);
-            id_uri_map.put(id, requestUri);
+            m_uri_id_map.put(requestUri, id);
+            m_id_uri_map.put(id, requestUri);
             return id;
         }
         return id;
@@ -43,7 +39,7 @@ public class AppUtil
  
     public static String getRedirectAfterLoginUrl(HttpSession session, int redirectId) 
     {
-        String url = id_uri_map.get(redirectId);
+        String url = m_id_uri_map.get(redirectId);
         if (url != null) return url;
         return null;
     }
