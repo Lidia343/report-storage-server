@@ -11,7 +11,7 @@
    
     	<div><h1 align = 'center'><em><small>Просмотр доступных для загрузки архивов, содержащих отчёты об ошибках в коде САПР и информацию о системе пользователя</small></em></h1></div><hr>
     	
-    	<h3>Для загрузки доступны лишь архивы из папки "reports", расположенной в домашней директории.</h3>
+    	<h3>Для загрузки доступны лишь архивы из папки "reports", расположенной в домашнем каталоге.</h3>
     	 <form action="${pageContext.request.contextPath}/file/upload" method = "get"
 	         enctype = "multipart/form-data">
 	         <input type = "file" name = "file" size = "75" accept="application/zip"/>
