@@ -7,7 +7,7 @@
       	<title>Просмотр доступного файла</title>
    </head>
    <body>
-   		<jsp:include page="logoutView.jsp"></jsp:include>
+   		<jsp:include page="unauthorizationView.jsp"></jsp:include>
    
     	<div><h1 align = 'center'><em><small>Просмотр доступных для загрузки архивов, содержащих отчёты об ошибках в коде САПР и информацию о системе пользователя</small></em></h1></div><hr>
     	

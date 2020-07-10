@@ -6,6 +6,6 @@
 		<meta charset="UTF-8">
 	</head>
 	<body>
-		<a href="${pageContext.request.contextPath}/logout">Выйти</a>
+		<a href="${pageContext.request.contextPath}/unauth">Выйти</a>
 	</body>
 </html>
