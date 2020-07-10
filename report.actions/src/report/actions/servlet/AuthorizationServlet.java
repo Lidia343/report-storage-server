@@ -9,69 +9,58 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import report.actions.user.UserAccount;
+import report.actions.security.SecurityFilter;
 import report.actions.util.AppUtil;
  
-@WebServlet("/login")
-public class LoginServlet extends HttpServlet 
+@WebServlet("/auth")
+public class AuthorizationServlet extends HttpServlet 
 {
     private static final long serialVersionUID = 1L;
  
-    public LoginServlet() 
+    public AuthorizationServlet() 
     {
         super();
     }
  
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+    protected void doGet(HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException 
     {
-        RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/loginView.jsp");
-        dispatcher.forward(request, response);
+    	doForward(a_request, a_response);
     }
  
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+    protected void doPost(HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException
     {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
- 
-        UserAccount acc = new UserAccount(username, password);
+        String clientSendingToken = a_request.getParameter("token");
+        String rightSendingToken = new SecurityFilter().getToken(SecurityFilter.SENDING_TOKEN_FILE_NAME);
         
-        String name = "name";
-        String pass = "123";
-        if (!username.equals(name) && !password.equals(pass))
+        if (!clientSendingToken.equals(rightSendingToken))
         {
-        	String errorMessage = "Invalid userName or Password";
-        	 
-            request.setAttribute("errorMessage", errorMessage);
+        	String errorMessage = "Invalid token";
+            a_request.setAttribute("errorMessage", errorMessage);
  
-            RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/loginView.jsp");
-            dispatcher.forward(request, response);
+            doForward(a_request, a_response);
             return;
         }
-        /*if (acc == null) 
-        {
-            String errorMessage = "Invalid userName or Password";
- 
-            request.setAttribute("errorMessage", errorMessage);
- 
-            RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/loginView.jsp");
-            dispatcher.forward(request, response);
-            return;
-        }*/
- 
-        AppUtil.storeLoginedUser(request.getSession(), acc);
+        
+        AppUtil.storeToken(a_request.getSession(), clientSendingToken);
  
         int redirectId = -1;
         try 
         {
-            redirectId = Integer.parseInt(request.getParameter("redirectId"));
+            redirectId = Integer.parseInt(a_request.getParameter("redirectId"));
         } 
         catch (Exception e) 
         {
         }
-        String requestUri = AppUtil.getRedirectAfterLoginUrl(request.getSession(), redirectId);
-        if (requestUri != null)  response.sendRedirect(requestUri);
-        else response.sendRedirect(request.getContextPath() + "/mainView");
+        String requestUri = AppUtil.getRedirectAfterLoginUrl(a_request.getSession(), redirectId);
+        if (requestUri != null)  a_response.sendRedirect(requestUri);
+        else a_response.sendRedirect(a_request.getContextPath() + "/mainView");
+    }
+    
+    private void doForward (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException
+    {
+    	RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/authorizationView.jsp");
+        dispatcher.forward(a_request, a_response);
     }
 }

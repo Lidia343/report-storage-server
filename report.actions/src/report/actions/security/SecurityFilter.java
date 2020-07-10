@@ -1,7 +1,10 @@
-package report.actions.filter;
+package report.actions.security;
 
+import java.io.BufferedReader;
 import java.io.IOException;
- 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -12,13 +15,13 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import report.actions.user.UserAccount;
 import report.actions.util.AppUtil;
  
 @WebFilter("/*")
 public class SecurityFilter implements Filter 
 {
-	private final String m_token = "4r3rSw4654wyb3aEg4Fqq6454qwEbh6q346qGm8emxgok9E8543e";
+	public static final String RECEIVING_TOKEN_FILE_NAME = "reportReceivingToken.txt";
+	public static final String SENDING_TOKEN_FILE_NAME = "reportSendingToken.txt";
 	
     @Override
     public void destroy() 
@@ -34,9 +37,9 @@ public class SecurityFilter implements Filter
  
         String servletPath = request.getServletPath();
  
-        UserAccount loginedUser = AppUtil.getLoginedUser(request.getSession());
+        String sendingToken = AppUtil.getToken(request.getSession());
  
-        if (servletPath.equals("/login")) 
+        if (servletPath.equals("/auth")) 
         {
             chain.doFilter(request, response);
             return;
@@ -45,18 +48,18 @@ public class SecurityFilter implements Filter
         HttpServletRequest wrapRequest = request;
         if (request.getServletPath().contains("/file"))
         {
-        	if (loginedUser == null)
+        	if (sendingToken == null)
         	{
         		if (request.getMethod().equals("GET"))
 	            {
 	                String requestUri = request.getRequestURI();
 	                int redirectId = AppUtil.storeRedirectAfterLoginUrl(request.getSession(), requestUri);
-	                response.sendRedirect(wrapRequest.getContextPath() + "/login?redirectId=" + redirectId);
+	                response.sendRedirect(wrapRequest.getContextPath() + "/auth?redirectId=" + redirectId);
 	                return;
 	            } 
         		if (request.getMethod().equals("POST"))
         		{
-        			if (!request.getHeader("Authorization").equals(m_token))
+        			if (!request.getHeader("Authorization").equals(getToken(RECEIVING_TOKEN_FILE_NAME)))
         			{
         				   response.sendError(401, "Unauthorized");
         				   return;
@@ -72,5 +75,17 @@ public class SecurityFilter implements Filter
     public void init(FilterConfig fConfig) throws ServletException 
     {
     	
+    }
+    
+    public String getToken (String a_tokenFileName) throws IOException
+    {
+    	try (InputStream in = getClass().getClassLoader().getResourceAsStream(a_tokenFileName);
+   		     BufferedReader reader = new BufferedReader(new InputStreamReader(in)))
+   		{
+   			String token = reader.readLine();
+   			if (token.endsWith("\r\n")) 
+   				token = token.substring(0, token.length());
+   			return token;
+   		}
     }
 }

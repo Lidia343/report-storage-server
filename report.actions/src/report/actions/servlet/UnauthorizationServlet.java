@@ -8,12 +8,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
  
-@WebServlet("/logout")
-public class LogoutServlet extends HttpServlet 
+@WebServlet("/unauth")
+public class UnauthorizationServlet extends HttpServlet 
 {
     private static final long serialVersionUID = 1L;
  
-    public LogoutServlet() 
+    public UnauthorizationServlet() 
     {
         super();
     }
