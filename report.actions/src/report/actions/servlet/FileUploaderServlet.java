@@ -1,5 +1,6 @@
 package report.actions.servlet;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,7 +29,22 @@ public class FileUploaderServlet extends HttpServlet
 	   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	   {
 		   String fileName = request.getParameter("file");
-		   if (fileName == null || fileName.equals(""))
+		   File archiveDir = new File(AppUtil.getReportArchivePath());
+		   
+		   boolean contain = false;
+		   if (fileName != null)
+		   {
+			   for (File f : archiveDir.listFiles())
+			   {
+				   if (fileName.equals(f.getName())) 
+				   {
+					   contain = true;
+					   break;
+				   }
+			   }
+		   }
+		   
+		   if (fileName == null || !contain)
 		   {
 			   RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/existingFileView.jsp");
 		       dispatcher.forward(request, response);
