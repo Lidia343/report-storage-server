@@ -24,30 +24,38 @@ public class SecurityFilter implements Filter
 	public static final String SENDING_TOKEN_FILE_NAME = "reportSendingToken.txt";
 	
     @Override
-    public void destroy() 
+    public void destroy () 
     {
-    	
     }
  
     @Override
-    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException 
+    public void doFilter (ServletRequest a_request, ServletResponse a_response, FilterChain a_chain) throws IOException, ServletException 
     {
-        HttpServletRequest request = (HttpServletRequest) req;
-        HttpServletResponse response = (HttpServletResponse) resp;
+        HttpServletRequest request = (HttpServletRequest) a_request;
+        HttpServletResponse response = (HttpServletResponse) a_response;
  
         String servletPath = request.getServletPath();
- 
-        String sendingToken = AppUtil.getToken(request.getSession());
- 
+        if (!servletPath.equals("/auth") && 
+        	!servletPath.equals("/unauth") && 
+        	!servletPath.equals("/main") && 
+        	!servletPath.equals("/file") &&
+            !servletPath.equals("/file/upload") &&
+            !servletPath.equals("/"))
+        {
+        	response.sendError(404, "Not found");
+			return;
+        }
+        
         if (servletPath.equals("/auth")) 
         {
-            chain.doFilter(request, response);
+            a_chain.doFilter(request, response);
             return;
         }
         
         HttpServletRequest wrapRequest = request;
         if (request.getServletPath().contains("/file"))
         {
+        	String sendingToken = AppUtil.getToken(request.getSession());
         	if (sendingToken == null)
         	{
         		if (request.getMethod().equals("GET"))
@@ -67,12 +75,11 @@ public class SecurityFilter implements Filter
         		}
         	}
         }
- 
-        chain.doFilter(wrapRequest, response);
+        a_chain.doFilter(wrapRequest, response);
     }
  
     @Override
-    public void init(FilterConfig fConfig) throws ServletException 
+    public void init (FilterConfig a_fConfig) throws ServletException 
     {
     	
     }
