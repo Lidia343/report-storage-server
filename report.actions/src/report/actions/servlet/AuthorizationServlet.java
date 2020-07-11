@@ -17,19 +17,19 @@ public class AuthorizationServlet extends HttpServlet
 {
     private static final long serialVersionUID = 1L;
  
-    public AuthorizationServlet() 
+    public AuthorizationServlet () 
     {
         super();
     }
  
     @Override
-    protected void doGet(HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException 
+    protected void doGet (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException 
     {
     	doForward(a_request, a_response);
     }
  
     @Override
-    protected void doPost(HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException
+    protected void doPost (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException
     {
         String clientSendingToken = a_request.getParameter("token");
         String rightSendingToken = new SecurityFilter().getToken(SecurityFilter.SENDING_TOKEN_FILE_NAME);
@@ -55,7 +55,7 @@ public class AuthorizationServlet extends HttpServlet
         }
         String requestUri = AppUtil.getRedirectAfterLoginUrl(a_request.getSession(), redirectId);
         if (requestUri != null)  a_response.sendRedirect(requestUri);
-        else a_response.sendRedirect(a_request.getContextPath() + "/mainView");
+        else a_response.sendRedirect(a_request.getContextPath() + "/main");
     }
     
     private void doForward (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException

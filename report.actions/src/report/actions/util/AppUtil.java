@@ -14,32 +14,32 @@ public class AppUtil
     private static final Map<Integer, String> m_id_uri_map = new HashMap<Integer, String>();
     private static final Map<String, Integer> m_uri_id_map = new HashMap<String, Integer>();
  
-    public static void storeToken(HttpSession a_session, String a_token)
+    public static void storeToken (HttpSession a_session, String a_token)
     {
         a_session.setAttribute("token", a_token);
     }
  
-    public static String getToken(HttpSession a_session) 
+    public static String getToken (HttpSession a_session) 
     {
         return (String)a_session.getAttribute("token");
     }
  
-    public static int storeRedirectAfterLoginUrl(HttpSession session, String requestUri) 
+    public static int storeRedirectAfterLoginUrl (HttpSession a_session, String a_requestUri) 
     {
-        Integer id = m_uri_id_map.get(requestUri);
+        Integer id = m_uri_id_map.get(a_requestUri);
         if (id == null) 
         {
             id = REDIRECT_ID++;
-            m_uri_id_map.put(requestUri, id);
-            m_id_uri_map.put(id, requestUri);
+            m_uri_id_map.put(a_requestUri, id);
+            m_id_uri_map.put(id, a_requestUri);
             return id;
         }
         return id;
     }
  
-    public static String getRedirectAfterLoginUrl(HttpSession session, int redirectId) 
+    public static String getRedirectAfterLoginUrl (HttpSession a_session, int a_redirectId) 
     {
-        String url = m_id_uri_map.get(redirectId);
+        String url = m_id_uri_map.get(a_redirectId);
         if (url != null) return url;
         return null;
     }
