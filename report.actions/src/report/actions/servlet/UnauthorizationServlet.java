@@ -13,21 +13,21 @@ public class UnauthorizationServlet extends HttpServlet
 {
     private static final long serialVersionUID = 1L;
  
-    public UnauthorizationServlet() 
+    public UnauthorizationServlet () 
     {
         super();
     }
  
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+    protected void doGet (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException 
     {
-        request.getSession().invalidate();
-        response.sendRedirect(request.getContextPath() + "/");
+        a_request.getSession().invalidate();
+        a_response.sendRedirect(a_request.getContextPath() + "/auth");
     }
  
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+    protected void doPost (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException 
     {
-        this.doGet(request, response);
+        this.doGet(a_request, a_response);
     }
 }

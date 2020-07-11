@@ -20,15 +20,15 @@ public class MainServlet extends HttpServlet
     }
  
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+    protected void doGet (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException 
     {
         RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/mainView.jsp");
-        dispatcher.forward(request, response);
+        dispatcher.forward(a_request, a_response);
     }
  
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+    protected void doPost (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException 
     {
-        doGet(request, response);
+        doGet(a_request, a_response);
     }
 }
