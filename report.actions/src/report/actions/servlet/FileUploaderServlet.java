@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
@@ -20,16 +19,17 @@ public class FileUploaderServlet extends HttpServlet
 {
 	   private static final long serialVersionUID = 1L;
 	   
-	   public FileUploaderServlet() 
+	   public FileUploaderServlet () 
 	   {
 	      super();
 	   }
 	 
 	   @Override
-	   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+	   protected void doGet (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException 
 	   {
-		   String fileName = request.getParameter("file");
-		   File archiveDir = new File(AppUtil.getReportArchivePath());
+		   String fileName = a_request.getParameter("file");
+		   String archivePath = AppUtil.getReportArchivePath();
+		   File archiveDir = new File(archivePath);
 		   
 		   boolean contain = false;
 		   if (fileName != null)
@@ -43,16 +43,20 @@ public class FileUploaderServlet extends HttpServlet
 				   }
 			   }
 		   }
-		   
-		   if (fileName == null || !contain)
+		   else
 		   {
-			   RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/existingFileView.jsp");
-		       dispatcher.forward(request, response);
-		       return;
+			   a_response.sendError(424, "Failed Dependency");
+			   return;
 		   }
 		   
-	       try (ServletOutputStream out = response.getOutputStream(); 
-	    		InputStream in = new FileInputStream(AppUtil.getReportArchivePath() + "\\" + fileName))
+		   if (!contain)
+		   {
+			   a_response.sendError(410, "Gone");
+			   return;
+		   }
+		   
+	       try (ServletOutputStream out = a_response.getOutputStream(); 
+	    		InputStream in = new FileInputStream(archivePath + "\\" + fileName))
 	       {
 		       byte[] buffer = new byte[1024*64];
 		       int length;
@@ -60,15 +64,15 @@ public class FileUploaderServlet extends HttpServlet
 		       {
 		    	   out.write(buffer, 0, length);
 		       }
-		       response.setContentType("application/zip");
-		       response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+		       a_response.setContentType("application/zip");
+		       a_response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
 		       out.flush();
 	       }
 	   }
 	 
 	   @Override
-	   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+	   protected void doPost (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException 
 	   {
-		   
+		   a_response.sendError(405, "Method Not Allowed");
 	   }
 }
