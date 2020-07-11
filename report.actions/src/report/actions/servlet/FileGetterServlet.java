@@ -51,10 +51,10 @@ public class FileGetterServlet extends HttpServlet
 			   out.println("");
 			   out.println("\t\t<div><p>Выберите файл для загрузки:</p></div><hr>");
 			   out.println("");
-			       
+			   
 			   for (File f : files)
 			   {
-				   out.println("\t\t<form action='http://localhost:8080/report.actions/file/upload' method = 'get' enctype = 'multipart/form-data'>");
+				   out.println("\t\t<form action='" + a_request.getRequestURL() + "/upload" + "' method = 'get' enctype = 'multipart/form-data'>");
 			       out.println("\t\t<input type = 'text' name = 'file' value = '" + f.getName() + "' readonly = 'readonly' size = '31'/>");
 			       out.println("\t\t<input type = 'submit' value = 'Загрузить'>");
 			       out.println("\t\t</form>");
