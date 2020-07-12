@@ -1,0 +1,66 @@
+											    Инструкция
+
+
+1. Скачать сервер Tomcat с официального сайта: https://tomcat.apache.org/download-70.cgi Это ссылка на седьмую версию. Можно выбрать другую, изменив в строке "70" на соответствующий номер. При 
+написании данной инструкции использовалась версия 7.0.94.
+
+2. Установить Tomcat в определённую папку.
+
+3. Открыть файл startup.bat (для Windows) или startup.sh (для Linux), который находится в папке bin в корневом каталоге Tomcat. После строки "setlocal" следующей строкой указать путь к переменной 
+JAVA_HOME. Например:
+
+	setlocal
+	set JAVA_HOME="D:\jdk8"  (для Windows)
+
+	setlocal
+	JAVA_HOME="/usr/lib/jvm/open-jdk"  (для Linux)
+
+4. В файле server.xml, что находится в папке conf, изменить строки
+
+	<Realm className="org.apache.catalina.realm.LockOutRealm">
+        <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
+               resourceName="UserDatabase"/>
+        </Realm>
+
+на
+	
+	<Realm className="org.apache.catalina.realm.MemoryRealm"/>
+
+5. Открыть файл tomcat-users.xml в папке conf и указать в нём пользователей, которые могут использовать Tomcat. Одному пользователю можно дать одну или несколько ролей. Существуют уже определённые 
+роли: manager-gui, manager-script, manager-jmx, manager-status, admin-gui, admin-script. 
+Например, объявление пользователя с двумя ролями может выглядеть следующим образом:
+
+	<tomcat-users>
+		<role rolename="manager-gui"/>
+		<role rolename="manager-script"/>
+		<user username="manager1" password="manager111" roles="manager-gui, manager-script"/>
+	</tomcat-users>
+
+Пользователь объявляется ниже ролей.
+
+6. Запустить Tomcat. Для запуска необходимо открыть файл startup.bat (Windows) или startup.sh (Linux) в папке bin.
+
+7. В браузере перейти по адресу http://localhost:8080/manager. Ввести логин и пароль пользователя (из файла tomcat-users.xml).
+
+8. Для следующего шага необходимо иметь WAR файл вашего веб-приложения. В Eclipse IDE для его получения нужно кликнуть правой кнопкой мыши на проекте, выбрать Export -> WAR file, указать имя файла и 
+директорию, в которой он должен находиться. Остальные настройки можно оставить по умолчанию.
+
+9. Развернуть WAR файл. На странице по адресу http://localhost:8080/manager необходимо найти пункт "Развернуть серверный WAR файл". Ниже указать путь, по которому будет доступно выше приложение 
+(например, если указать путь "/main", получить доступ к главной странице проекта можно будет по адресу http://localhost:8080/main). Указать путь XML файла конфигурации контекста (необязательно) и путь 
+до директории вашего WAR файла (например, C:/Users/<имя пользователя>/Desktop/myfile.war). Нажать кнопку "Развернуть". После этого сервер должен ответить, что приложение успешно развёрнуто в контекстном 
+пути.
+
+10. Перейти по адресу http://localhost:8080/<указанный путь> для получения доступа к главной странице вашего веб-приложения.
+
+11 (необязательно). Вы можете изменить порт, который использует Tomcat (по умолчанию используется порт 8080). Для этого откройте файл server.xml в папке conf и измените в нём строку 
+
+	<Connector port="8080" protocol="HTTP/1.1"
+        connectionTimeout="20000"
+        redirectPort="8443" />
+
+на
+
+	<Connector port="<другой порт>" protocol="HTTP/1.1"
+        connectionTimeout="20000"
+        redirectPort="8443" />
+	
