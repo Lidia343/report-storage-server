@@ -56,9 +56,9 @@ public class AppUtil
     
     public static String getReportArchivePath ()
     {
-       String a_path = System.getProperty("user.home") + File.separator + "reports";
-  	   File archiveDir = new File(a_path);
-  	   archiveDir.mkdir();
-  	   return a_path;
+    	String path = System.getProperty("java.io.tmpdir") + "reports";
+    	File archiveDir = new File(path);
+    	archiveDir.mkdir();
+    	return path;
     }
 }
