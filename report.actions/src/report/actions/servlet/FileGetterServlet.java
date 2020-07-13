@@ -6,8 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -80,40 +78,23 @@ public class FileGetterServlet extends HttpServlet
    @Override
    protected void doPost (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException, NumberFormatException 
    {
-	   InputStream requestIn = a_request.getInputStream();
+	   InputStream in = a_request.getInputStream();
 	   
-	   String fileNameLengthLine = AppUtil.getNextStringFromInputStream(requestIn, m_lengthOfSizeLine);
+	   String fileNameLengthLine = AppUtil.getNextStringFromInputStream(in, m_lengthOfSizeLine);
 	   int fileNameLength = Integer.parseInt(fileNameLengthLine);
 	   
-	   String fileName = AppUtil.getNextStringFromInputStream(requestIn, fileNameLength);
+	   String fileName = AppUtil.getNextStringFromInputStream(in, fileNameLength);
 	  
-	   String entryCountLine = AppUtil.getNextStringFromInputStream(requestIn, m_lengthOfSizeLine);
-	   int entryCount = Integer.parseInt(entryCountLine);
-	   
 	   File archive = new File (m_archivePath + "\\" + fileName);
 	   archive.createNewFile();
-	   try (BufferedOutputStream bufOut = new BufferedOutputStream(new FileOutputStream(archive));
-	        ZipOutputStream zout = new ZipOutputStream (bufOut))
+	   
+	   try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(archive)))
 	   {
-		   for(int i = 0 ; i < entryCount; i++)
+		   byte[] buffer = new byte[1024*64];
+		   int length;
+		   while ((length = in.read(buffer)) > 0)
 		   {
-			   String entryNameLengthLine = AppUtil.getNextStringFromInputStream(requestIn, m_lengthOfSizeLine);
-			   int entryNameLength = Integer.parseInt(entryNameLengthLine);
-			   
-			   String entryName = AppUtil.getNextStringFromInputStream(requestIn, entryNameLength);
-			   zout.putNextEntry(new ZipEntry(entryName));
-			   
-			   String entrySizeLengthLine = AppUtil.getNextStringFromInputStream(requestIn, m_lengthOfSizeLine);
-			   int entrySizeLength = Integer.parseInt(entrySizeLengthLine);
-			   
-			   String entrySizeLine = AppUtil.getNextStringFromInputStream(requestIn, entrySizeLength);
-			   long entrySize = Long.parseLong(entrySizeLine);
-			   
-			   for (long j = 0L; j < entrySize; j++)
-			   {
-				   zout.write(requestIn.read());
-			   }
-			   zout.closeEntry(); 
+			   out.write(buffer, 0, length);
 		   }
 	   }
    }

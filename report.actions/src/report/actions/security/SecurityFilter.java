@@ -90,7 +90,7 @@ public class SecurityFilter implements Filter
    		     BufferedReader reader = new BufferedReader(new InputStreamReader(in)))
    		{
    			String token = reader.readLine();
-   			if (token.endsWith("\r\n")) 
+   			if (token.endsWith(System.lineSeparator())) 
    				token = token.substring(0, token.length());
    			return token;
    		}
