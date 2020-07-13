@@ -19,7 +19,6 @@ import report.actions.util.AppUtil;
 public class FileGetterServlet extends HttpServlet 
 {
    private static final long serialVersionUID = 1L;
-   private final int m_lengthOfSizeLine = 2;
    private String m_archivePath = "";
  
    public FileGetterServlet () throws IOException 
@@ -80,12 +79,12 @@ public class FileGetterServlet extends HttpServlet
    {
 	   InputStream in = a_request.getInputStream();
 	   
-	   String fileNameLengthLine = AppUtil.getNextStringFromInputStream(in, m_lengthOfSizeLine);
+	   String fileNameLengthLine = AppUtil.getNextStringFromInputStream(in, 2);
 	   int fileNameLength = Integer.parseInt(fileNameLengthLine);
 	   
 	   String fileName = AppUtil.getNextStringFromInputStream(in, fileNameLength);
 	  
-	   File archive = new File (m_archivePath + "\\" + fileName);
+	   File archive = new File (m_archivePath + File.separator + fileName);
 	   archive.createNewFile();
 	   
 	   try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(archive)))

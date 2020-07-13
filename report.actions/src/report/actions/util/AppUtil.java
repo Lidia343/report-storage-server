@@ -56,7 +56,7 @@ public class AppUtil
     
     public static String getReportArchivePath ()
     {
-       String a_path = System.getProperty("user.home") + "\\reports";
+       String a_path = System.getProperty("user.home") + File.separator + "reports";
   	   File archiveDir = new File(a_path);
   	   archiveDir.mkdir();
   	   return a_path;
