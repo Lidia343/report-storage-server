@@ -25,7 +25,7 @@ public class AuthorizationServlet extends HttpServlet
     @Override
     protected void doGet (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException 
     {
-    	doForward(a_request, a_response);
+    	doForward(a_request, a_response, "/WEB-INF/views/authorizationView.jsp");
     }
  
     @Override
@@ -39,7 +39,7 @@ public class AuthorizationServlet extends HttpServlet
         	String errorMessage = "Invalid token";
             a_request.setAttribute("errorMessage", errorMessage);
  
-            doForward(a_request, a_response);
+            doForward(a_request, a_response, "/WEB-INF/views/invalidToken.jsp");
             return;
         }
         
@@ -58,9 +58,9 @@ public class AuthorizationServlet extends HttpServlet
         else a_response.sendRedirect(a_request.getContextPath() + "/main");
     }
     
-    private void doForward (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException
+    private void doForward (HttpServletRequest a_request, HttpServletResponse a_response, String a_jspPath) throws ServletException, IOException
     {
-    	RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/authorizationView.jsp");
+    	RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher(a_jspPath);
         dispatcher.forward(a_request, a_response);
     }
 }
