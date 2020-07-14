@@ -45,7 +45,7 @@ public class FileUploaderServlet extends HttpServlet
 		   }
 		   else
 		   {
-			   a_response.sendError(424, "Failed Dependency");
+			   a_response.sendError(400, "Bad request");
 			   return;
 		   }
 		   
