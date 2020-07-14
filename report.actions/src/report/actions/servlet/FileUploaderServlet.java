@@ -56,7 +56,7 @@ public class FileUploaderServlet extends HttpServlet
 		   }
 		   
 	       try (ServletOutputStream out = a_response.getOutputStream(); 
-	    		InputStream in = new FileInputStream(archivePath + "\\" + fileName))
+	    		InputStream in = new FileInputStream(archivePath + File.separator + fileName))
 	       {
 		       byte[] buffer = new byte[1024*64];
 		       int length;
