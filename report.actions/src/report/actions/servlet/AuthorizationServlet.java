@@ -39,7 +39,7 @@ public class AuthorizationServlet extends HttpServlet
         	String errorMessage = "Invalid token";
             a_request.setAttribute("errorMessage", errorMessage);
  
-            doForward(a_request, a_response, "/WEB-INF/views/invalidToken.jsp");
+            doForward(a_request, a_response, "/WEB-INF/views/invalidTokenView.jsp");
             return;
         }
         

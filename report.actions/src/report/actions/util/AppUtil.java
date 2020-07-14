@@ -62,9 +62,9 @@ public class AppUtil
     	return path;
     }
     
-    public static String getSubstringToCharacter (String a_line, char c)
+    public static String getSubstringToCharacter (String a_line, char a_c)
     {
-    	int end = a_line.indexOf(c);
+    	int end = a_line.indexOf(a_c);
 		if (end != -1) a_line = a_line.substring(0, end);
 		
 		return a_line;
