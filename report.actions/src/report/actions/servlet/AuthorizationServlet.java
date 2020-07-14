@@ -32,7 +32,7 @@ public class AuthorizationServlet extends HttpServlet
     protected void doPost (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException
     {
         String clientSendingToken = a_request.getParameter("token");
-        String rightSendingToken = new SecurityFilter().getToken(SecurityFilter.SENDING_TOKEN_FILE_NAME);
+        String rightSendingToken = SecurityFilter.getToken(SecurityFilter.SENDING_TOKEN);
         
         if (!clientSendingToken.equals(rightSendingToken))
         {

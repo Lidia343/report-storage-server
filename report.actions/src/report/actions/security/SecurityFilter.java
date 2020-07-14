@@ -1,8 +1,9 @@
 package report.actions.security;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import javax.servlet.Filter;
@@ -20,8 +21,10 @@ import report.actions.util.AppUtil;
 @WebFilter("/*")
 public class SecurityFilter implements Filter 
 {
-	public static final String RECEIVING_TOKEN_FILE_NAME = "reportReceivingToken.txt";
-	public static final String SENDING_TOKEN_FILE_NAME = "reportSendingToken.txt";
+	public static final int RECEIVING_TOKEN = 0;
+	public static final int SENDING_TOKEN = 1;
+	
+	private static final String m_configFilePathPart = "report-storage-server" + File.separator + "config.txt";
 	
     @Override
     public void destroy () 
@@ -67,7 +70,7 @@ public class SecurityFilter implements Filter
 	            } 
         		if (request.getMethod().equals("POST"))
         		{
-        			if (!request.getHeader("Authorization").equals(getToken(RECEIVING_TOKEN_FILE_NAME)))
+        			if (!request.getHeader("Authorization").equals(getToken(RECEIVING_TOKEN)))
         			{
         				   response.sendError(401, "Unauthorized");
         				   return;
@@ -84,14 +87,19 @@ public class SecurityFilter implements Filter
     	
     }
     
-    public String getToken (String a_tokenFileName) throws IOException
+    public static String getToken (int a_tokenType) throws IOException
     {
-    	try (InputStream in = getClass().getClassLoader().getResourceAsStream(a_tokenFileName);
+    	try (FileInputStream in = new FileInputStream (System.getProperty("user.home") + File.separator + m_configFilePathPart);
    		     BufferedReader reader = new BufferedReader(new InputStreamReader(in)))
    		{
    			String token = reader.readLine();
-   			if (token.endsWith(System.lineSeparator())) 
-   				token = token.substring(0, token.length());
+   			if (a_tokenType == SENDING_TOKEN) token = reader.readLine();
+   			
+   			token = AppUtil.getSubstringToCharacter(token, '/');
+   			token = AppUtil.getSubstringToCharacter(token, '\t');
+   			token = AppUtil.getSubstringToCharacter(token, ' ');
+   			token = AppUtil.getSubstringToCharacter(token, System.lineSeparator().charAt(0));
+   			
    			return token;
    		}
     }

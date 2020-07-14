@@ -61,4 +61,12 @@ public class AppUtil
     	archiveDir.mkdir();
     	return path;
     }
+    
+    public static String getSubstringToCharacter (String a_line, char c)
+    {
+    	int end = a_line.indexOf(c);
+		if (end != -1) a_line = a_line.substring(0, end);
+		
+		return a_line;
+    }
 }
