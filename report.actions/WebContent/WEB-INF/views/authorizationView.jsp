@@ -12,7 +12,7 @@
  
       <form method='POST' action='${pageContext.request.contextPath}/auth'>
          <input type='hidden' name='redirectId' value='${param.redirectId}' />     
-         <font size = 4> Токен: <input type='text' name='token' /></font><br>
+         <font size = 4> Токен: <input type='password' name='token' /></font><br>
 		 <input type="submit" value= 'Войти' />
       </form>
       
