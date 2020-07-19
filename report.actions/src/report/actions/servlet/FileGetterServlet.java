@@ -6,6 +6,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import report.actions.comp.FileListSorter;
 import report.actions.util.AppUtil;
  
 @WebServlet("/file")
@@ -31,12 +35,28 @@ public class FileGetterServlet extends HttpServlet
    protected void doGet (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException 
    {
 	   File archiveDir = new File(m_archivePath);
-	   File[] files = archiveDir.listFiles();
-	   int fileNum = files.length;
 	   
-	   a_response.setContentType("text/html");  
+	   File[] dirs = archiveDir.listFiles();
+	   List<File> files = new ArrayList<>();
+	   
+	   for (File d : dirs)
+	   {
+		   if (d.isDirectory())
+		   {
+			   for (File f : d.listFiles())
+			   {
+				   files.add(f);
+			   }
+		   }
+	   }
+	   
+	   Collections.sort(files, new FileListSorter());
+	   
+	   int fileNum = files.size();
+	   
+	   a_response.setContentType("text/html");
 	   a_response.setCharacterEncoding("UTF-8");
-	   try(PrintWriter out = a_response.getWriter())
+	   try (PrintWriter out = a_response.getWriter())
 	   {
 		   out.println("<html>");
 		   if (fileNum != 0) 
@@ -51,8 +71,12 @@ public class FileGetterServlet extends HttpServlet
 			   
 			   for (File f : files)
 			   {
+				   String email = f.getParentFile().getName();
+				   String fileName = f.getName();
 				   out.println("\t\t<form action='" + a_request.getRequestURL() + "/upload" + "' method = 'get' enctype = 'multipart/form-data'>");
-			       out.println("\t\t<input type = 'text' name = 'file' value = '" + f.getName() + "' readonly = 'readonly' size = '31'/>");
+				   out.println("\t\t<input type = 'hidden' name = 'email' value = '" + email + "'/>");
+				   out.println("\t\t<input type = 'hidden' name = 'file' value = '" + fileName + "'/>");
+			       out.println("\t\t<input type = 'text' name = 'emailAndFile' value = '" + email + ": " + fileName + "' readonly = 'readonly' size = '60'/>");
 			       out.println("\t\t<input type = 'submit' value = 'Загрузить'>");
 			       out.println("\t\t</form>");
 			       out.println("");
@@ -79,12 +103,14 @@ public class FileGetterServlet extends HttpServlet
    {
 	   InputStream in = a_request.getInputStream();
 	   
-	   String fileNameLengthLine = AppUtil.getNextStringFromInputStream(in, 2);
-	   int fileNameLength = Integer.parseInt(fileNameLengthLine);
+	   String email = AppUtil.getStringFromInputStream(in);
 	   
-	   String fileName = AppUtil.getNextStringFromInputStream(in, fileNameLength);
+	   String archivePath = m_archivePath + File.separator + email;
+	   new File(archivePath).mkdir();
+	   
+	   String fileName = AppUtil.getStringFromInputStream(in);
 	  
-	   File archive = new File (m_archivePath + File.separator + fileName);
+	   File archive = new File (archivePath + File.separator + fileName);
 	   archive.createNewFile();
 	   
 	   try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(archive)))
