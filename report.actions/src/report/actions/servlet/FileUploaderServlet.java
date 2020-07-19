@@ -27,8 +27,10 @@ public class FileUploaderServlet extends HttpServlet
 	   @Override
 	   protected void doGet (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException 
 	   {
+		   String email = a_request.getParameter("email");
 		   String fileName = a_request.getParameter("file");
-		   String archivePath = AppUtil.getReportArchivePath();
+		   
+		   String archivePath = AppUtil.getReportArchivePath() + File.separator + email;
 		   File archiveDir = new File(archivePath);
 		   
 		   boolean contain = false;
