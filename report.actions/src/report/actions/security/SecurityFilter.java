@@ -43,6 +43,7 @@ public class SecurityFilter implements Filter
         	!servletPath.equals("/main") && 
         	!servletPath.equals("/file") &&
             !servletPath.equals("/file/upload") &&
+            !servletPath.equals("/email") &&
             !servletPath.equals("/"))
         {
         	response.sendError(404, "Not found");
@@ -56,12 +57,13 @@ public class SecurityFilter implements Filter
         }
         
         HttpServletRequest wrapRequest = request;
-        if (request.getServletPath().contains("/file"))
+        servletPath = request.getServletPath();
+        if (servletPath.contains("/file") || servletPath.contains("/email"))
         {
         	String sendingToken = AppUtil.getToken(request.getSession());
         	if (sendingToken == null)
         	{
-        		if (request.getMethod().equals("GET"))
+        		if (request.getMethod().equals("GET") && !servletPath.contains("/email"))
 	            {
 	                String requestUri = request.getRequestURI();
 	                int redirectId = AppUtil.storeRedirectAfterLoginUrl(request.getSession(), requestUri);
@@ -82,7 +84,7 @@ public class SecurityFilter implements Filter
     }
  
     @Override
-    public void init (FilterConfig a_fConfig) throws ServletException 
+    public void init (FilterConfig a_config) throws ServletException 
     {
     	
     }
