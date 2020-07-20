@@ -43,6 +43,7 @@ public class SecurityFilter implements Filter
         	!servletPath.equals("/main") && 
         	!servletPath.equals("/file") &&
             !servletPath.equals("/file/upload") &&
+            !servletPath.equals("/file/send") &&
             !servletPath.equals("/email") &&
             !servletPath.equals("/"))
         {
@@ -63,13 +64,6 @@ public class SecurityFilter implements Filter
         	String sendingToken = AppUtil.getToken(request.getSession());
         	if (sendingToken == null)
         	{
-        		if (request.getMethod().equals("GET") && !servletPath.contains("/email"))
-	            {
-	                String requestUri = request.getRequestURI();
-	                int redirectId = AppUtil.storeRedirectAfterLoginUrl(request.getSession(), requestUri);
-	                response.sendRedirect(wrapRequest.getContextPath() + "/auth?redirectId=" + redirectId);
-	                return;
-	            } 
         		if (request.getMethod().equals("POST"))
         		{
         			if (!request.getHeader("Authorization").equals(getToken(RECEIVING_TOKEN)))
@@ -78,6 +72,13 @@ public class SecurityFilter implements Filter
         				   return;
         			}
         		}
+        		if (request.getMethod().equals("GET") && !servletPath.contains("/email"))
+	            {
+	                String requestUri = request.getRequestURI();
+	                int redirectId = AppUtil.storeRedirectAfterLoginUrl(request.getSession(), requestUri);
+	                response.sendRedirect(wrapRequest.getContextPath() + "/auth?redirectId=" + redirectId);
+	                return;
+	            } 
         	}
         }
         a_chain.doFilter(wrapRequest, response);

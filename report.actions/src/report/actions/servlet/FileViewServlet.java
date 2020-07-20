@@ -1,10 +1,7 @@
 package report.actions.servlet;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,12 +17,12 @@ import report.actions.comp.FileListSorter;
 import report.actions.util.AppUtil;
  
 @WebServlet("/file")
-public class FileGetterServlet extends HttpServlet 
+public class FileViewServlet extends HttpServlet 
 {
    private static final long serialVersionUID = 1L;
    private String m_archivePath = "";
  
-   public FileGetterServlet () throws IOException 
+   public FileViewServlet () throws IOException 
    {
       super();
       m_archivePath = AppUtil.getReportArchivePath();
@@ -101,26 +98,6 @@ public class FileGetterServlet extends HttpServlet
    @Override
    protected void doPost (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException, NumberFormatException 
    {
-	   InputStream in = a_request.getInputStream();
-	   
-	   String email = AppUtil.getStringFromInputStream(in);
-	   
-	   String archivePath = m_archivePath + File.separator + email;
-	   new File(archivePath).mkdir();
-	   
-	   String fileName = AppUtil.getStringFromInputStream(in);
-	  
-	   File archive = new File (archivePath + File.separator + fileName);
-	   archive.createNewFile();
-	   
-	   try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(archive)))
-	   {
-		   byte[] buffer = new byte[1024*64];
-		   int length;
-		   while ((length = in.read(buffer)) > 0)
-		   {
-			   out.write(buffer, 0, length);
-		   }
-	   }
+	   a_response.sendError(405, "Method Not Allowed");
    }
 }

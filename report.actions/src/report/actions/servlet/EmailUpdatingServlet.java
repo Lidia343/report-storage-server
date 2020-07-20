@@ -13,11 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 import report.actions.util.AppUtil;
 
 @WebServlet("/email")
-public class EmailGetterServlet extends HttpServlet 
+public class EmailUpdatingServlet extends HttpServlet 
 {
 	private static final long serialVersionUID = 1L;
 
-	public EmailGetterServlet ()
+	public EmailUpdatingServlet ()
 	{
 		super();
 	}
