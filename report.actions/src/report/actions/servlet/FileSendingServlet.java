@@ -43,6 +43,8 @@ public class FileSendingServlet extends HttpServlet
 	   new File(archivePath).mkdir();
 	   
 	   String fileName = AppUtil.getStringFromInputStream(in);
+	   
+	   fileName = "report (" + AppUtil.getCurrentDateAndTime() + ").zip";
 	  
 	   File archive = new File (archivePath + File.separator + fileName);
 	   archive.createNewFile();
