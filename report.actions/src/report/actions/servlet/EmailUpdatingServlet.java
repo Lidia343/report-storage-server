@@ -36,6 +36,12 @@ public class EmailUpdatingServlet extends HttpServlet
 		String oldEmail = AppUtil.getStringFromInputStream(in);
 		String newEmail = AppUtil.getStringFromInputStream(in);
 		
+		if (!AppUtil.checkEmail(oldEmail) || !AppUtil.checkEmail(newEmail))
+		 {
+			   a_response.sendError(400, "Bad request");
+			   return;
+		 }
+		
 		String reportPathPart = AppUtil.getReportArchivePath() + File.separator;
 		String newReportPath = reportPathPart + newEmail;
 		File reportDir;

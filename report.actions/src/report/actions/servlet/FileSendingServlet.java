@@ -1,10 +1,14 @@
 package report.actions.servlet;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -35,28 +39,61 @@ public class FileSendingServlet extends HttpServlet
    @Override
    protected void doPost (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException, NumberFormatException 
    {
-	   InputStream in = a_request.getInputStream();
+	   ByteArrayOutputStream bout = new ByteArrayOutputStream();
+	   AppUtil.writeInputStreamToOutputStream(a_request.getInputStream(), bout);
 	   
-	   String email = AppUtil.getStringFromInputStream(in);
+	   ByteArrayInputStream baseBin = new ByteArrayInputStream(bout.toByteArray());
+	   ByteArrayInputStream binForZipChecking = new ByteArrayInputStream(bout.toByteArray());
+	   
+	   String email = AppUtil.getStringFromInputStream(baseBin);
+	   AppUtil.getStringFromInputStream(binForZipChecking);
+	   
+	   if (!AppUtil.checkEmail(email))
+	   {
+		   a_response.sendError(400, "Bad request");
+		   return;
+	   }
+	   
+	   String fileName = AppUtil.getStringFromInputStream(baseBin);
+	   AppUtil.getStringFromInputStream(binForZipChecking);
+	   
+	   if (!fileName.equals("report.zip"))
+	   {
+		   a_response.sendError(400, "Bad request");
+		   return;
+	   }
+	   
+	   ZipInputStream zin = new ZipInputStream(new BufferedInputStream (binForZipChecking));
+	   int entryCount = 0;
+	   ZipEntry entry = zin.getNextEntry();
+	   while (entry != null)
+	   {
+		   entryCount++;
+		   String name = entry.getName();
+	       if (!name.equals(".log") && !name.equals("metadata.xml") && !name.equals("summary.txt"))
+		   {
+			   a_response.sendError(400, "Bad request");
+			   return;
+		   }
+		   entry = zin.getNextEntry();
+	   }
+		   
+	   if (entryCount < 2 || entryCount > 3)
+	   {
+		   a_response.sendError(400, "Bad request");
+		   return;
+	   }
 	   
 	   String archivePath = m_archivePath + File.separator + email;
 	   new File(archivePath).mkdir();
 	   
-	   String fileName = AppUtil.getStringFromInputStream(in);
-	   
 	   fileName = "report (" + AppUtil.getCurrentDateAndTime() + ").zip";
-	  
 	   File archive = new File (archivePath + File.separator + fileName);
 	   archive.createNewFile();
 	   
 	   try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(archive)))
 	   {
-		   byte[] buffer = new byte[1024*64];
-		   int length;
-		   while ((length = in.read(buffer)) > 0)
-		   {
-			   out.write(buffer, 0, length);
-		   }
+		   AppUtil.writeInputStreamToOutputStream(baseBin, out);
 	   }
    }
 }
