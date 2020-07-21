@@ -3,6 +3,7 @@ package report.actions.util;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -44,6 +45,17 @@ public class AppUtil
         String url = m_id_uri_map.get(a_redirectId);
         if (url != null) return url;
         return null;
+    }
+    
+    public static void writeInputStreamToOutputStream (InputStream a_in, OutputStream a_out) throws IOException
+    {
+       int length;
+ 	   byte[] buffer = new byte[1024*64];
+ 	   while ((length = a_in.read(buffer)) > -1)
+ 	   {
+ 		   a_out.write(buffer, 0, length);
+ 	   }
+ 	   a_out.flush();
     }
     
     public static String getStringFromInputStream (InputStream a_in) throws IOException
@@ -98,5 +110,32 @@ public class AppUtil
     public static String addZeroToString (String a_string)
 	{
 		return a_string.length() == 1 ? "0" + a_string : a_string;
+	}
+    
+    public static boolean checkEmail (String a_email)
+	{	
+		if (a_email == null) return false;
+		
+		if (a_email.contains(File.separator) || a_email.contains("/") || a_email.contains("\\") ||
+			a_email.contains(":") || a_email.contains("*") || a_email.contains("?") ||
+			a_email.contains("\"") || a_email.contains("<") || a_email.contains(">") || a_email.contains("|")) 
+		{
+			return false;
+		}
+		
+		int atCharIndex = a_email.indexOf('@');
+		if (atCharIndex == -1 || atCharIndex == 0 || atCharIndex >= (a_email.length() - 3)) return false;
+		
+		int dotCharCount = 0;
+		for (int i = atCharIndex + 1; i < a_email.length(); i++)
+		{
+			if (a_email.charAt(i) == '.') dotCharCount++;
+		}
+		if (dotCharCount != 1) return false;
+		
+		int dotCharIndex = a_email.lastIndexOf('.');
+		if (dotCharIndex == (atCharIndex + 1) || dotCharIndex == (a_email.length() - 1)) return false;
+		
+		return true;
 	}
 }
