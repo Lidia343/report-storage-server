@@ -3,7 +3,6 @@ package report.actions.servlet;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,21 +30,7 @@ public class FileViewServlet extends HttpServlet
    @Override
    protected void doGet (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException 
    {
-	   File archiveDir = new File(m_archivePath);
-	   
-	   File[] dirs = archiveDir.listFiles();
-	   List<File> files = new ArrayList<>();
-	   
-	   for (File d : dirs)
-	   {
-		   if (d.isDirectory())
-		   {
-			   for (File f : d.listFiles())
-			   {
-				   files.add(f);
-			   }
-		   }
-	   }
+	   List<File> files = AppUtil.getAllArchives(m_archivePath);
 	   
 	   Collections.sort(files, new FileListSorter());
 	   
