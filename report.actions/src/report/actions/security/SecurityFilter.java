@@ -43,7 +43,7 @@ public class SecurityFilter implements Filter
         	!servletPath.equals("/main") && 
         	!servletPath.equals("/file") &&
             !servletPath.equals("/file/upload") &&
-            !servletPath.equals("/file/send") &&
+            !servletPath.equals("/file/download") &&
             !servletPath.equals("/email") &&
             !servletPath.equals("/"))
         {
