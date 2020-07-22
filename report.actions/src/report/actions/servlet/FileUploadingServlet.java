@@ -63,11 +63,10 @@ public class FileUploadingServlet extends HttpServlet
 	   while (entry != null)
 	   {
 		   entryCount++;
-		   String name = entry.getName();
 		   entry = zin.getNextEntry();
 	   }
 		   
-	   if (entryCount < 2 || entryCount > 3)
+	   if (entryCount > 100)
 	   {
 		   a_response.sendError(400, "Bad request");
 		   return;
