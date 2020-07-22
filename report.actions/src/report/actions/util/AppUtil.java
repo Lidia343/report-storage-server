@@ -10,7 +10,8 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
- 
+import java.util.zip.ZipInputStream;
+
 import javax.servlet.http.HttpSession;
  
 public class AppUtil 
@@ -67,6 +68,16 @@ public class AppUtil
  		   a_out.write(buffer, 0, length);
  	   }
  	   a_out.flush();
+    }
+    
+    public static void readNextZipEntry (ZipInputStream a_zin) throws IOException
+    {
+       byte[] buffer = new byte[1024*64];
+   	   while ((a_zin.read(buffer)) > -1)
+   	   {
+   		   
+   	   }
+   	   a_zin.closeEntry();
     }
     
     public static String getStringFromInputStream (InputStream a_in) throws IOException
