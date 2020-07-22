@@ -64,11 +64,6 @@ public class FileUploadingServlet extends HttpServlet
 	   {
 		   entryCount++;
 		   String name = entry.getName();
-	       if (!name.equals(".log") && !name.equals("metadata.xml") && !name.equals("summary.txt"))
-		   {
-			   a_response.sendError(400, "Bad request");
-			   return;
-		   }
 		   entry = zin.getNextEntry();
 	   }
 		   
