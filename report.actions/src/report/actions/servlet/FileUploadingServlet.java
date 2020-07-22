@@ -18,13 +18,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import report.actions.util.AppUtil;
  
-@WebServlet("/file/send")
-public class FileSendingServlet extends HttpServlet 
+@WebServlet("/file/upload")
+public class FileUploadingServlet extends HttpServlet 
 {
    private static final long serialVersionUID = 1L;
    private String m_archivePath = "";
  
-   public FileSendingServlet () throws IOException 
+   public FileUploadingServlet () throws IOException 
    {
       super();
       m_archivePath = AppUtil.getReportArchivePath();

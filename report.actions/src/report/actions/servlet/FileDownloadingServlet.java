@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import report.actions.util.AppUtil;
 
-@WebServlet("/file/upload")
+@WebServlet("/file/download")
 public class FileDownloadingServlet extends HttpServlet 
 {
 	   private static final long serialVersionUID = 1L;
