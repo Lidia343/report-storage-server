@@ -103,7 +103,7 @@ public class FileUploadingServlet extends HttpServlet
 			   
 			   long compSize = entry.getCompressedSize();
 			   long uncompSize = entry.getSize();
-			   if (uncompSize > AppUtil.MAX_UNCOMPRESSED_ENTRY_SIZE || (double)uncompSize/compSize > AppUtil.MAX_COMPRESSION_RATIO)
+			   if ((double)uncompSize/compSize > AppUtil.MAX_COMPRESSION_RATIO)
 			   {
 				   zin.close();
 				   return false;

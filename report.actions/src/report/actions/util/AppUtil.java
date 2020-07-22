@@ -75,9 +75,13 @@ public class AppUtil
        long byteCount = 0;
    	   while (a_zin.available() == 0)
    	   {
-   		   if (byteCount > MAX_UNCOMPRESSED_ENTRY_SIZE) return false;
    		   a_zin.read();
    		   byteCount++;
+   		   if (byteCount > MAX_UNCOMPRESSED_ENTRY_SIZE) 
+   		   {
+   			   a_zin.close();
+   			   return false;
+   		   }
    	   }
    	   a_zin.closeEntry();
    	   return true;
