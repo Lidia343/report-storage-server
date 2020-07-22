@@ -31,12 +31,6 @@ public class FileUploadingServlet extends HttpServlet
    }
    
    @Override
-   protected void doGet (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException 
-   {
-	   a_response.sendError(405, "Method Not Allowed");
-   }
- 
-   @Override
    protected void doPost (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException, NumberFormatException 
    {
 	   ByteArrayOutputStream bout = new ByteArrayOutputStream();

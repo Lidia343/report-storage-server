@@ -71,10 +71,4 @@ public class FileDownloadingServlet extends HttpServlet
 		       out.flush();
 	       }
 	   }
-	 
-	   @Override
-	   protected void doPost (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException 
-	   {
-		   a_response.sendError(405, "Method Not Allowed");
-	   }
 }

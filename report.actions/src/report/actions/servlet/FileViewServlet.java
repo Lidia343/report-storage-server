@@ -70,7 +70,7 @@ public class FileViewServlet extends HttpServlet
 			   {
 				   String email = f.getParentFile().getName();
 				   String fileName = f.getName();
-				   out.println("\t\t<form action='" + a_request.getRequestURL() + "/upload" + "' method = 'get' enctype = 'multipart/form-data'>");
+				   out.println("\t\t<form action='" + a_request.getRequestURL() + "/download" + "' method = 'get' enctype = 'multipart/form-data'>");
 				   out.println("\t\t<input type = 'hidden' name = 'email' value = '" + email + "'/>");
 				   out.println("\t\t<input type = 'hidden' name = 'file' value = '" + fileName + "'/>");
 			       out.println("\t\t<input type = 'text' name = 'emailAndFile' value = '" + email + ": " + fileName + "' readonly = 'readonly' size = '60'/>");
@@ -93,11 +93,5 @@ public class FileViewServlet extends HttpServlet
 		   out.println("</body>");
 		   out.println("</html>");
 	   }
-   }
- 
-   @Override
-   protected void doPost (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException, NumberFormatException 
-   {
-	   a_response.sendError(405, "Method Not Allowed");
    }
 }
