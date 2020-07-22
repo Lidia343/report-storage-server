@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -50,41 +51,7 @@ public class FileUploadingServlet extends HttpServlet
 	   String fileName = AppUtil.getStringFromInputStream(baseBin);
 	   AppUtil.getStringFromInputStream(binForZipChecking);
 	   
-	   boolean rightArchive = true;
-	   
-	   if (!AppUtil.checkEmail(email) || !fileName.equals("report.zip") || baseBin.available() > AppUtil.MAX_ARCHIVE_SIZE)
-	   {
-		   rightArchive = false;
-	   }
-	   
-	   ZipInputStream zin = new ZipInputStream(new BufferedInputStream (binForZipChecking));
-	   int entryCount = 0;
-	   try
-	   {
-		   ZipEntry entry = zin.getNextEntry();
-		   while (entry != null)
-		   {
-			   long compSize = entry.getCompressedSize();
-			   long uncompSize = entry.getSize();
-			   if (uncompSize > AppUtil.MAX_UNCOMPRESSED_ENTRY_SIZE || (double)(uncompSize/compSize) > AppUtil.MAX_COMPRESSION_RATIO)
-			   {
-				   rightArchive = false;
-			   }
-			   entryCount++;
-			   entry = zin.getNextEntry();
-		   }
-	   }
-	   catch (ZipException e)
-	   {
-		   rightArchive = false;
-	   }
-	   
-	   if (entryCount > AppUtil.MAX_ENTRY_COUNT)
-	   {
-		   rightArchive = false;
-	   }
-	   
-	   if (!rightArchive)
+	   if (!checkRequest(email, fileName, baseBin, binForZipChecking))
 	   {
 		   a_response.sendError(400, "Bad request");
 		   return;
@@ -101,7 +68,7 @@ public class FileUploadingServlet extends HttpServlet
 			   size--;
 		   }
 	   }
-	   
+	     
 	   String archivePath = m_archivePath + File.separator + email;
 	   new File(archivePath).mkdir();
 	   
@@ -113,5 +80,41 @@ public class FileUploadingServlet extends HttpServlet
 	   {
 		   AppUtil.writeInputStreamToOutputStream(baseBin, out);
 	   }
+   }
+   
+   private boolean checkRequest (String a_email, String a_fileName, InputStream a_baseBin, InputStream a_binForZipChecking) throws IOException
+   {
+	   if (!AppUtil.checkEmail(a_email) || !a_fileName.equals("report.zip") || a_baseBin.available() > AppUtil.MAX_ARCHIVE_SIZE)
+	   {
+		   return false;
+	   }
+	   
+	   ZipInputStream zin = new ZipInputStream(new BufferedInputStream (a_binForZipChecking));
+	   int entryCount = 0;
+	   try
+	   {
+		   ZipEntry entry = zin.getNextEntry();
+		   while (entry != null)
+		   {
+			   long compSize = entry.getCompressedSize();
+			   long uncompSize = entry.getSize();
+			   if (uncompSize > AppUtil.MAX_UNCOMPRESSED_ENTRY_SIZE || (double)uncompSize/compSize > AppUtil.MAX_COMPRESSION_RATIO)
+			   {
+				   return false;
+			   }
+			   entryCount++;
+			   entry = zin.getNextEntry();
+		   }
+	   }
+	   catch (ZipException e)
+	   {
+		  return false;
+	   }
+	   
+	   if (entryCount > AppUtil.MAX_ENTRY_COUNT)
+	   {
+		   return false;
+	   }
+	   return true;
    }
 }
