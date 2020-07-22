@@ -70,14 +70,17 @@ public class AppUtil
  	   a_out.flush();
     }
     
-    public static void readNextZipEntry (ZipInputStream a_zin) throws IOException
+    public static boolean readNextZipEntry (ZipInputStream a_zin) throws IOException
     {
-       byte[] buffer = new byte[1024*64];
-   	   while ((a_zin.read(buffer)) > -1)
+       long byteCount = 0;
+   	   while (a_zin.available() == 0)
    	   {
-   		   
+   		   if (byteCount > MAX_UNCOMPRESSED_ENTRY_SIZE) return false;
+   		   a_zin.read();
+   		   byteCount++;
    	   }
    	   a_zin.closeEntry();
+   	   return true;
     }
     
     public static String getStringFromInputStream (InputStream a_in) throws IOException

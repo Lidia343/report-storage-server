@@ -96,12 +96,16 @@ public class FileUploadingServlet extends HttpServlet
 		   ZipEntry entry = zin.getNextEntry();
 		   while (entry != null)
 		   {
-			   AppUtil.readNextZipEntry(zin);
-
+			   String name = entry.getName();
+			   if (name.endsWith(".zip")) return false;
+			   
+			   if (!AppUtil.readNextZipEntry(zin)) return false;
+			   
 			   long compSize = entry.getCompressedSize();
 			   long uncompSize = entry.getSize();
 			   if (uncompSize > AppUtil.MAX_UNCOMPRESSED_ENTRY_SIZE || (double)uncompSize/compSize > AppUtil.MAX_COMPRESSION_RATIO)
 			   {
+				   zin.close();
 				   return false;
 			   }
 			   entryCount++;
