@@ -79,7 +79,7 @@ public class FileUploadingServlet extends HttpServlet
 		   rightArchive = false;
 	   }
 		   
-	   if (entryCount > 100)
+	   if (entryCount > AppUtil.MAX_ENTRY_COUNT)
 	   {
 		   rightArchive = false;
 	   }
@@ -92,7 +92,7 @@ public class FileUploadingServlet extends HttpServlet
 	   
 	   List<File> files = AppUtil.getAllArchives(m_archivePath);
 	   
-	   if (files.size() == 20)
+	   if (files.size() == AppUtil.MAX_ARCHIVE_COUNT)
 	   {
 		   Collections.sort(files, new FileListSorter());
 		   files.get(files.size() - 1).delete();
