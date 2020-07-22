@@ -18,7 +18,7 @@ public class AppUtil
 	private static final long m_kByte = 1024;
 	 
 	public static final long MAX_ARCHIVE_SIZE = 5 * m_kByte * m_kByte; 
-	public static final long MAX_UNCOMPRESSED_ENTRY_SIZE = 5 * m_kByte * m_kByte; 
+	public static final long MAX_UNCOMPRESSED_ENTRY_SIZE = 10 * m_kByte * m_kByte * m_kByte; 
 	public static final double MAX_COMPRESSION_RATIO = 100;
 	
     private static int REDIRECT_ID = 0;
