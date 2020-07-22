@@ -78,7 +78,7 @@ public class FileUploadingServlet extends HttpServlet
 	   {
 		   rightArchive = false;
 	   }
-		   
+	   
 	   if (entryCount > AppUtil.MAX_ENTRY_COUNT)
 	   {
 		   rightArchive = false;
@@ -91,11 +91,15 @@ public class FileUploadingServlet extends HttpServlet
 	   }
 	   
 	   List<File> files = AppUtil.getAllArchives(m_archivePath);
-	   
-	   if (files.size() == AppUtil.MAX_ARCHIVE_COUNT)
+	   int size = files.size();
+	   if (size >= AppUtil.MAX_ARCHIVE_COUNT)
 	   {
 		   Collections.sort(files, new FileListSorter());
-		   files.get(files.size() - 1).delete();
+		   while (size >= AppUtil.MAX_ARCHIVE_COUNT)
+		   {
+			   files.get(size - 1).delete();
+			   size--;
+		   }
 	   }
 	   
 	   String archivePath = m_archivePath + File.separator + email;
