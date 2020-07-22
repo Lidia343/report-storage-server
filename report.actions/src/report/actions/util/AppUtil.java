@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
  
 import javax.servlet.http.HttpSession;
@@ -138,4 +140,25 @@ public class AppUtil
 		
 		return true;
 	}
+    
+    public static List<File> getAllArchives (String archivePath)
+    {
+    	File archiveDir = new File(archivePath);
+ 	   
+ 	    File[] dirs = archiveDir.listFiles();
+ 	    List<File> files = new ArrayList<>();
+ 	   
+ 	    for (File d : dirs)
+ 	    {
+ 		    if (d.isDirectory())
+ 		    {
+ 			    for (File f : d.listFiles())
+ 			    {
+ 				    files.add(f);
+ 			    }
+ 		    }
+ 	    }
+ 	    
+ 	    return files;
+    }
 }

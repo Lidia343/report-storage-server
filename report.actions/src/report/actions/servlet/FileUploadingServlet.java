@@ -7,7 +7,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.zip.ZipEntry;
+import java.util.Collections;
+import java.util.List;
+import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
 
 import javax.servlet.ServletException;
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import report.actions.comp.FileListSorter;
 import report.actions.util.AppUtil;
  
 @WebServlet("/file/upload")
@@ -59,11 +62,18 @@ public class FileUploadingServlet extends HttpServlet
 	   
 	   ZipInputStream zin = new ZipInputStream(new BufferedInputStream (binForZipChecking));
 	   int entryCount = 0;
-	   ZipEntry entry = zin.getNextEntry();
-	   while (entry != null)
+	   
+	   try
 	   {
-		   entryCount++;
-		   entry = zin.getNextEntry();
+		   while (zin.getNextEntry() != null)
+		   {
+			   entryCount++;
+		   }
+	   }
+	   catch (ZipException e)
+	   {
+		   a_response.sendError(400, "Bad request");
+		   return;
 	   }
 		   
 	   if (entryCount > 100)
@@ -74,6 +84,14 @@ public class FileUploadingServlet extends HttpServlet
 	   
 	   String archivePath = m_archivePath + File.separator + email;
 	   new File(archivePath).mkdir();
+	   
+	   List<File> files = AppUtil.getAllArchives(m_archivePath);
+	   
+	   if (files.size() == 20)
+	   {
+		   Collections.sort(files, new FileListSorter());
+		   files.get(files.size() - 1).delete();
+	   }
 	   
 	   fileName = "report (" + AppUtil.getCurrentDateAndTime() + ").zip";
 	   File archive = new File (archivePath + File.separator + fileName);
