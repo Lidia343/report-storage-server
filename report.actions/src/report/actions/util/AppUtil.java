@@ -15,10 +15,16 @@ import javax.servlet.http.HttpSession;
  
 public class AppUtil 
 {
+	private static final long m_kByte = 1024;
+	 
+	public static final long MAX_ARCHIVE_SIZE = 5 * m_kByte * m_kByte; 
+	public static final long MAX_UNCOMPRESSED_ENTRY_SIZE = 5 * m_kByte * m_kByte; 
+	public static final double MAX_COMPRESSION_RATIO = 100;
+	
     private static int REDIRECT_ID = 0;
     private static final Map<Integer, String> m_id_uri_map = new HashMap<Integer, String>();
     private static final Map<String, Integer> m_uri_id_map = new HashMap<String, Integer>();
- 
+    
     public static void storeToken (HttpSession a_session, String a_token)
     {
         a_session.setAttribute("token", a_token);

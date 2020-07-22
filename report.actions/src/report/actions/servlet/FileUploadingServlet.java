@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
 
@@ -25,6 +26,7 @@ import report.actions.util.AppUtil;
 public class FileUploadingServlet extends HttpServlet 
 {
    private static final long serialVersionUID = 1L;
+   
    private String m_archivePath = "";
  
    public FileUploadingServlet () throws IOException 
@@ -45,45 +47,48 @@ public class FileUploadingServlet extends HttpServlet
 	   String email = AppUtil.getStringFromInputStream(baseBin);
 	   AppUtil.getStringFromInputStream(binForZipChecking);
 	   
-	   if (!AppUtil.checkEmail(email))
-	   {
-		   a_response.sendError(400, "Bad request");
-		   return;
-	   }
-	   
 	   String fileName = AppUtil.getStringFromInputStream(baseBin);
 	   AppUtil.getStringFromInputStream(binForZipChecking);
 	   
-	   if (!fileName.equals("report.zip"))
+	   boolean rightArchive = true;
+	   
+	   if (!AppUtil.checkEmail(email) || !fileName.equals("report.zip") || baseBin.available() > AppUtil.MAX_ARCHIVE_SIZE)
 	   {
-		   a_response.sendError(400, "Bad request");
-		   return;
+		   rightArchive = false;
 	   }
 	   
 	   ZipInputStream zin = new ZipInputStream(new BufferedInputStream (binForZipChecking));
 	   int entryCount = 0;
-	   
 	   try
 	   {
-		   while (zin.getNextEntry() != null)
+		   ZipEntry entry = zin.getNextEntry();
+		   while (entry != null)
 		   {
+			   long compSize = entry.getCompressedSize();
+			   long uncompSize = entry.getSize();
+			   if (uncompSize > AppUtil.MAX_UNCOMPRESSED_ENTRY_SIZE || (double)(uncompSize/compSize) > AppUtil.MAX_COMPRESSION_RATIO)
+			   {
+				   rightArchive = false;
+			   }
 			   entryCount++;
+			   entry = zin.getNextEntry();
 		   }
 	   }
 	   catch (ZipException e)
 	   {
-		   a_response.sendError(400, "Bad request");
-		   return;
+		   rightArchive = false;
 	   }
 		   
 	   if (entryCount > 100)
 	   {
+		   rightArchive = false;
+	   }
+	   
+	   if (!rightArchive)
+	   {
 		   a_response.sendError(400, "Bad request");
 		   return;
 	   }
-	   
-	   String archivePath = m_archivePath + File.separator + email;
-	   new File(archivePath).mkdir();
 	   
 	   List<File> files = AppUtil.getAllArchives(m_archivePath);
 	   
@@ -92,6 +97,9 @@ public class FileUploadingServlet extends HttpServlet
 		   Collections.sort(files, new FileListSorter());
 		   files.get(files.size() - 1).delete();
 	   }
+	   
+	   String archivePath = m_archivePath + File.separator + email;
+	   new File(archivePath).mkdir();
 	   
 	   fileName = "report (" + AppUtil.getCurrentDateAndTime() + ").zip";
 	   File archive = new File (archivePath + File.separator + fileName);
