@@ -89,16 +89,16 @@ public class FileUploadingServlet extends HttpServlet
 		   String email = AppUtil.getStringFromInputStream(baseIn);
 		   AppUtil.getStringFromInputStream(inForZipChecking);
 		   
-		   String fileName = AppUtil.getStringFromInputStream(baseIn);
+		   String archiveName = AppUtil.getStringFromInputStream(baseIn);
 		   AppUtil.getStringFromInputStream(inForZipChecking);
 		   
-		   if (!AppUtil.checkEmail(email) || !fileName.equals("report.zip"))
+		   if (!AppUtil.checkEmail(email) || !archiveName.equals("report.zip"))
 		   {
 			   return null;
 		   }
 		   
 		   m_email = email;
-		   m_archiveName = fileName;
+		   m_archiveName = archiveName;
 		   
 		   int entryCount = 0;
 		   try (ZipInputStream zin = new ZipInputStream(new BufferedInputStream (inForZipChecking)))
