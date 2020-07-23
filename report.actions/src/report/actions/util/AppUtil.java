@@ -59,46 +59,41 @@ public class AppUtil
         return null;
     }
     
-    public static boolean writeInputStreamToOutputStream (InputStream a_in, OutputStream a_out) throws IOException
+    public static boolean writeInputStreamToOutputStream (InputStream a_in, OutputStream a_out, long a_byteNumber) throws IOException
     {
        long byteCount = 0;
-       int byteForWriting;
- 	   while ((byteForWriting = a_in.read()) > -1)
+       
+       byte[] buffer = new byte[1024*64];
+       int length;
+ 	   while ((length = a_in.read(buffer)) > -1)
  	   {
- 		   byteCount++;
- 		   if (byteCount > MAX_ARCHIVE_SIZE)
+ 		   byteCount += length;
+ 		   if (byteCount > a_byteNumber)
 		   {
-			   close (a_in, a_out);
 			   return false;
 		   }
- 		   a_out.write(byteForWriting);
+ 		   a_out.write(buffer, 0, length);
  	   }
  	   a_out.flush();
- 	   close (a_in, a_out);
  	   return true;
     }
-    
-    private static void close (InputStream a_in, OutputStream a_out) throws IOException
-    {
-    	a_in.close();
-		a_out.close();
-    }
-    
+      
     public static boolean readNextZipEntry (ZipInputStream a_zin) throws IOException
     {
-       long byteCount = 0;
-   	   while (a_zin.available() == 0)
-   	   {
-   		   byteCount++;
-   		   if (byteCount > MAX_UNCOMPRESSED_ENTRY_SIZE) 
-		   {
-			   a_zin.close();
-			   return false;
-		   }
-   		   a_zin.read();
-   	   }
-   	   a_zin.closeEntry();
-   	   return true;
+    	long byteCount = 0;
+        
+        byte[] buffer = new byte[1024*64];
+        int length;
+        while ((length = a_zin.read(buffer)) > -1)
+   	    {
+   		    byteCount += length;
+   		    if (byteCount > MAX_UNCOMPRESSED_ENTRY_SIZE) 
+		    {    
+			    return false;
+		    }
+   	    }
+   	    a_zin.closeEntry();
+   	    return true;
     }
     
     public static String getStringFromInputStream (InputStream a_in) throws IOException

@@ -70,14 +70,14 @@ public class FileUploadingServlet extends HttpServlet
 	   
 	   try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(archive)))
 	   {
-		   AppUtil.writeInputStreamToOutputStream(in, out);
+		   AppUtil.writeInputStreamToOutputStream(in, out, AppUtil.MAX_ARCHIVE_SIZE);
 	   }
    }
    
    private ByteArrayInputStream checkRequestAndGetInputStream (HttpServletRequest a_request) throws IOException
    {
 	   ByteArrayOutputStream out = new ByteArrayOutputStream();
-	   if (!AppUtil.writeInputStreamToOutputStream(a_request.getInputStream(), out))
+	   if (!AppUtil.writeInputStreamToOutputStream(a_request.getInputStream(), out, AppUtil.MAX_ARCHIVE_SIZE))
 	   {
 		   return null;
 	   }
