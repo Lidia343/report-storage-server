@@ -7,7 +7,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -28,6 +27,9 @@ public class FileUploadingServlet extends HttpServlet
 {
    private static final long serialVersionUID = 1L;
    
+   private String m_email = "";
+   private String m_archiveName = "";
+   
    private String m_archivePath = "";
  
    public FileUploadingServlet () throws IOException 
@@ -39,19 +41,9 @@ public class FileUploadingServlet extends HttpServlet
    @Override
    protected void doPost (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException, NumberFormatException 
    {
-	   ByteArrayOutputStream bout = new ByteArrayOutputStream();
-	   AppUtil.writeInputStreamToOutputStream(a_request.getInputStream(), bout);
+	   ByteArrayInputStream in = checkRequestAndGetInputStream(a_request);
 	   
-	   ByteArrayInputStream baseBin = new ByteArrayInputStream(bout.toByteArray());
-	   ByteArrayInputStream binForZipChecking = new ByteArrayInputStream(bout.toByteArray());
-	   
-	   String email = AppUtil.getStringFromInputStream(baseBin);
-	   AppUtil.getStringFromInputStream(binForZipChecking);
-	   
-	   String fileName = AppUtil.getStringFromInputStream(baseBin);
-	   AppUtil.getStringFromInputStream(binForZipChecking);
-	   
-	   if (!checkRequest(email, fileName, baseBin, binForZipChecking))
+	   if (in == null)
 	   {
 		   a_response.sendError(400, "Bad request");
 		   return;
@@ -69,58 +61,76 @@ public class FileUploadingServlet extends HttpServlet
 		   }
 	   }
 	     
-	   String archivePath = m_archivePath + File.separator + email;
+	   String archivePath = m_archivePath + File.separator + m_email;
 	   new File(archivePath).mkdir();
 	   
-	   fileName = "report (" + AppUtil.getCurrentDateAndTime() + ").zip";
-	   File archive = new File (archivePath + File.separator + fileName);
+	   m_archiveName = "report (" + AppUtil.getCurrentDateAndTime() + ").zip";
+	   File archive = new File (archivePath + File.separator + m_archiveName);
 	   archive.createNewFile();
 	   
 	   try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(archive)))
 	   {
-		   AppUtil.writeInputStreamToOutputStream(baseBin, out);
+		   AppUtil.writeInputStreamToOutputStream(in, out);
 	   }
    }
    
-   private boolean checkRequest (String a_email, String a_fileName, InputStream a_baseBin, InputStream a_binForZipChecking) throws IOException
+   private ByteArrayInputStream checkRequestAndGetInputStream (HttpServletRequest a_request) throws IOException
    {
-	   if (!AppUtil.checkEmail(a_email) || !a_fileName.equals("report.zip") || a_baseBin.available() > AppUtil.MAX_ARCHIVE_SIZE)
+	   ByteArrayOutputStream out = new ByteArrayOutputStream();
+	   if (!AppUtil.writeInputStreamToOutputStream(a_request.getInputStream(), out))
 	   {
-		   return false;
+		   return null;
 	   }
 	   
-	   ZipInputStream zin = new ZipInputStream(new BufferedInputStream (a_binForZipChecking));
-	   int entryCount = 0;
-	   try
-	   {
-		   ZipEntry entry = zin.getNextEntry();
-		   while (entry != null)
+	   ByteArrayInputStream baseIn = new ByteArrayInputStream(out.toByteArray());
+	   
+	   try (ByteArrayInputStream inForZipChecking = new ByteArrayInputStream(out.toByteArray()))
+	   {  
+		   String email = AppUtil.getStringFromInputStream(baseIn);
+		   AppUtil.getStringFromInputStream(inForZipChecking);
+		   
+		   String fileName = AppUtil.getStringFromInputStream(baseIn);
+		   AppUtil.getStringFromInputStream(inForZipChecking);
+		   
+		   if (!AppUtil.checkEmail(email) || !fileName.equals("report.zip"))
 		   {
-			   String name = entry.getName();
-			   if (name.endsWith(".zip")) return false;
-			   
-			   if (!AppUtil.readNextZipEntry(zin)) return false;
-			   
-			   long compSize = entry.getCompressedSize();
-			   long uncompSize = entry.getSize();
-			   if ((double)uncompSize/compSize > AppUtil.MAX_COMPRESSION_RATIO)
+			   return null;
+		   }
+		   
+		   m_email = email;
+		   m_archiveName = fileName;
+		   
+		   int entryCount = 0;
+		   try (ZipInputStream zin = new ZipInputStream(new BufferedInputStream (inForZipChecking)))
+		   {
+			   try
 			   {
-				   zin.close();
-				   return false;
+				   ZipEntry entry = zin.getNextEntry();
+				   while (entry != null)
+				   {  
+					   if (!AppUtil.readNextZipEntry(zin)) return null;
+					   
+					   long compSize = entry.getCompressedSize();
+					   long uncompSize = entry.getSize();
+					   if ((double)uncompSize/compSize > AppUtil.MAX_COMPRESSION_RATIO)
+					   {  
+						   return null;
+					   }
+					   entryCount++;
+					   entry = zin.getNextEntry();
+				   }
 			   }
-			   entryCount++;
-			   entry = zin.getNextEntry();
+			   catch (ZipException e)
+			   {
+				  return null;
+			   }
+		   }
+		   
+		   if (entryCount > AppUtil.MAX_ENTRY_COUNT)
+		   {
+			   return null;
 		   }
 	   }
-	   catch (ZipException e)
-	   {
-		  return false;
-	   }
-	   
-	   if (entryCount > AppUtil.MAX_ENTRY_COUNT)
-	   {
-		   return false;
-	   }
-	   return true;
+	   return baseIn;
    }
 }
