@@ -65,13 +65,13 @@ public class AppUtil
        int byteForWriting;
  	   while ((byteForWriting = a_in.read()) > -1)
  	   {
- 		   a_out.write(byteForWriting);
  		   byteCount++;
  		   if (byteCount > MAX_ARCHIVE_SIZE)
- 		   {
- 			   close (a_in, a_out);
- 			   return false;
- 		   }
+		   {
+			   close (a_in, a_out);
+			   return false;
+		   }
+ 		   a_out.write(byteForWriting);
  	   }
  	   a_out.flush();
  	   close (a_in, a_out);
@@ -89,13 +89,13 @@ public class AppUtil
        long byteCount = 0;
    	   while (a_zin.available() == 0)
    	   {
-   		   a_zin.read();
    		   byteCount++;
    		   if (byteCount > MAX_UNCOMPRESSED_ENTRY_SIZE) 
-   		   {
-   			   a_zin.close();
-   			   return false;
-   		   }
+		   {
+			   a_zin.close();
+			   return false;
+		   }
+   		   a_zin.read();
    	   }
    	   a_zin.closeEntry();
    	   return true;
