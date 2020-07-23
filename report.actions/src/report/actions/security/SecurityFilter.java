@@ -59,9 +59,9 @@ public class SecurityFilter implements Filter
         
         HttpServletRequest wrapRequest = request;
         servletPath = request.getServletPath();
-        if (servletPath.contains("/file") || servletPath.contains("/email"))
+        if (servletPath.contains("/file") || servletPath.equals("/email"))
         {
-        	String sendingToken = AppUtil.getToken(request.getSession());
+        	String sendingToken = TokenStorage.INSTANCE.getToken(request.getSession());
         	if (sendingToken == null)
         	{
         		if (request.getMethod().equals("POST"))
@@ -72,11 +72,10 @@ public class SecurityFilter implements Filter
         				   return;
         			}
         		}
-        		if (request.getMethod().equals("GET") && !servletPath.contains("/email"))
+        		if (request.getMethod().equals("GET") && !servletPath.equals("/email"))
 	            {
-	                String requestUri = request.getRequestURI();
-	                int redirectId = AppUtil.storeRedirectAfterLoginUrl(request.getSession(), requestUri);
-	                response.sendRedirect(wrapRequest.getContextPath() + "/auth?redirectId=" + redirectId);
+	                response.sendRedirect(wrapRequest.getContextPath() + "/auth?redirect=" + 
+	                                      servletPath.substring(1, servletPath.length()));
 	                return;
 	            } 
         	}

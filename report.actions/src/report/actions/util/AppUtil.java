@@ -7,12 +7,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.zip.ZipInputStream;
-
-import javax.servlet.http.HttpSession;
  
 public class AppUtil 
 {
@@ -25,40 +21,6 @@ public class AppUtil
 	public static final long MAX_UNCOMPRESSED_ENTRY_SIZE = 10 * m_kByte * m_kByte * m_kByte; 
 	public static final double MAX_COMPRESSION_RATIO = 100;
 	
-    private static int REDIRECT_ID = 0;
-    private static final Map<Integer, String> m_id_uri_map = new HashMap<Integer, String>();
-    private static final Map<String, Integer> m_uri_id_map = new HashMap<String, Integer>();
-    
-    public static void storeToken (HttpSession a_session, String a_token)
-    {
-        a_session.setAttribute("token", a_token);
-    }
- 
-    public static String getToken (HttpSession a_session) 
-    {
-        return (String)a_session.getAttribute("token");
-    }
- 
-    public static int storeRedirectAfterLoginUrl (HttpSession a_session, String a_requestUri) 
-    {
-        Integer id = m_uri_id_map.get(a_requestUri);
-        if (id == null) 
-        {
-            id = REDIRECT_ID++;
-            m_uri_id_map.put(a_requestUri, id);
-            m_id_uri_map.put(id, a_requestUri);
-            return id;
-        }
-        return id;
-    }
- 
-    public static String getRedirectAfterLoginUrl (HttpSession a_session, int a_redirectId) 
-    {
-        String url = m_id_uri_map.get(a_redirectId);
-        if (url != null) return url;
-        return null;
-    }
-    
     public static boolean writeInputStreamToOutputStream (InputStream a_in, OutputStream a_out, long a_byteNumber) throws IOException
     {
        long byteCount = 0;

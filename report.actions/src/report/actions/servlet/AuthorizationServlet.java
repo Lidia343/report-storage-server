@@ -9,14 +9,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import report.actions.security.TokenStorage;
 import report.actions.security.SecurityFilter;
-import report.actions.util.AppUtil;
  
 @WebServlet("/auth")
 public class AuthorizationServlet extends HttpServlet 
 {
     private static final long serialVersionUID = 1L;
- 
+    
     public AuthorizationServlet () 
     {
         super();
@@ -43,19 +43,12 @@ public class AuthorizationServlet extends HttpServlet
             return;
         }
         
-        AppUtil.storeToken(a_request.getSession(), clientSendingToken);
+        TokenStorage.INSTANCE.storeToken(a_request.getSession(), clientSendingToken);
  
-        int redirectId = -1;
-        try 
-        {
-            redirectId = Integer.parseInt(a_request.getParameter("redirectId"));
-        } 
-        catch (Exception e) 
-        {
-        }
-        String requestUri = AppUtil.getRedirectAfterLoginUrl(a_request.getSession(), redirectId);
-        if (requestUri != null)  a_response.sendRedirect(requestUri);
-        else a_response.sendRedirect(a_request.getContextPath() + "/main");
+        String redirect = a_request.getParameter("redirect");
+        String contextPath = a_request.getContextPath();
+        if (redirect != null)  a_response.sendRedirect(contextPath + "/" + redirect);
+        else a_response.sendRedirect(contextPath + "/main");
     }
     
     private void doForward (HttpServletRequest a_request, HttpServletResponse a_response, String a_jspPath) throws ServletException, IOException
