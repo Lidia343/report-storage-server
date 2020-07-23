@@ -59,15 +59,29 @@ public class AppUtil
         return null;
     }
     
-    public static void writeInputStreamToOutputStream (InputStream a_in, OutputStream a_out) throws IOException
+    public static boolean writeInputStreamToOutputStream (InputStream a_in, OutputStream a_out) throws IOException
     {
-       int length;
- 	   byte[] buffer = new byte[1024*64];
- 	   while ((length = a_in.read(buffer)) > -1)
+       long byteCount = 0;
+       int byteForWriting;
+ 	   while ((byteForWriting = a_in.read()) > -1)
  	   {
- 		   a_out.write(buffer, 0, length);
+ 		   a_out.write(byteForWriting);
+ 		   byteCount++;
+ 		   if (byteCount > MAX_ARCHIVE_SIZE)
+ 		   {
+ 			   close (a_in, a_out);
+ 			   return false;
+ 		   }
  	   }
  	   a_out.flush();
+ 	   close (a_in, a_out);
+ 	   return true;
+    }
+    
+    private static void close (InputStream a_in, OutputStream a_out) throws IOException
+    {
+    	a_in.close();
+		a_out.close();
     }
     
     public static boolean readNextZipEntry (ZipInputStream a_zin) throws IOException
