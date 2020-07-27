@@ -10,6 +10,9 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.zip.ZipInputStream;
  
+/**
+ * Утилитарный класс.
+ */
 public class AppUtil 
 {
 	public static final int MAX_ARCHIVE_COUNT = 20; 
@@ -21,7 +24,8 @@ public class AppUtil
 	public static final long MAX_UNCOMPRESSED_ENTRY_SIZE = 10 * m_kByte * m_kByte * m_kByte; 
 	public static final double MAX_COMPRESSION_RATIO = 100;
 	
-    public static boolean writeInputStreamToOutputStream (InputStream a_in, OutputStream a_out, long a_byteNumber) throws IOException
+    public static boolean writeInputStreamToOutputStream (InputStream a_in, OutputStream a_out, 
+    		                                              long a_byteNumber) throws IOException
     {
        long byteCount = 0;
        
@@ -40,7 +44,7 @@ public class AppUtil
  	   return true;
     }
       
-    public static boolean readNextZipEntry (ZipInputStream a_zin) throws IOException
+    public static boolean readNextZipEntry (ZipInputStream a_zin, long a_byteNumber) throws IOException
     {
     	long byteCount = 0;
         
@@ -49,7 +53,7 @@ public class AppUtil
         while ((length = a_zin.read(buffer)) > -1)
    	    {
    		    byteCount += length;
-   		    if (byteCount > MAX_UNCOMPRESSED_ENTRY_SIZE) 
+   		    if (byteCount > a_byteNumber) 
 		    {    
 			    return false;
 		    }
@@ -58,6 +62,14 @@ public class AppUtil
    	    return true;
     }
     
+    /**
+     * Читает длину следующей строки из входного потока,
+     * затем читает следующую строку и возвращает её.
+     * @param a_in
+     * 		  Входной поток
+     * @return строку из входного потока
+     * @throws IOException
+     */
     public static String getStringFromInputStream (InputStream a_in) throws IOException
     {
     	String stringLengthLine = AppUtil.getNextStringFromInputStream(a_in, 2);
@@ -84,6 +96,15 @@ public class AppUtil
     	return path;
     }
     
+    /**
+     * @param a_line
+     * 		  Строка
+     * @param a_c
+     * 	      Символ строки
+     * @return подстроку строки a_line (от символа на позиции
+     * 0 до символа a_c (не включая его)). Если символа a_c нет
+     * в строке, возвращает саму строку
+     */
     public static String getSubstringToCharacter (String a_line, char a_c)
     {
     	int end = a_line.indexOf(a_c);
@@ -107,11 +128,24 @@ public class AppUtil
 		return day + "-" + month + "-" + year + " - " + hour + "-" + min + "-" + sec;
 	}
     
+    /**
+	 * Устанавливает началом строки a_string символ "0", если длина строки равна 1.
+	 * @param a_string 
+	 *        Строка для изменения
+	 * @return изменённую строку
+	 */
     public static String addZeroToString (String a_string)
 	{
 		return a_string.length() == 1 ? "0" + a_string : a_string;
 	}
     
+    /**
+	 * Проверяет переданную строку на соответствие формату адреса электронной почты.
+	 * @param a_email 
+	 *        Строка для проверки
+	 * @return true - если строка прошла проверку,
+	 * false - иначе
+	 */
     public static boolean checkEmail (String a_email)
 	{	
 		if (a_email == null) return false;
@@ -139,9 +173,13 @@ public class AppUtil
 		return true;
 	}
     
-    public static List<File> getAllArchives (String archivePath)
+    /**
+     * @param archivePath - путь к архивам
+     * @return все архивы во всех папках в директории a_archivePath
+     */
+    public static List<File> getAllArchives (String a_archivePath)
     {
-    	File archiveDir = new File(archivePath);
+    	File archiveDir = new File(a_archivePath);
  	   
  	    File[] dirs = archiveDir.listFiles();
  	    List<File> files = new ArrayList<>();

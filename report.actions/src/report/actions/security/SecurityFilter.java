@@ -18,11 +18,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import report.actions.util.AppUtil;
  
+/**
+ * Фильтр для определения url, к которым может иметь доступ клиент.
+ */
 @WebFilter("/*")
 public class SecurityFilter implements Filter 
 {
-	public static final int RECEIVING_TOKEN = 0;
-	public static final int SENDING_TOKEN = 1;
+	public static final int UPLOADING_TOKEN = 0;
+	public static final int DOWNLOADING_TOKEN = 1;
 	
 	private static final String m_configFilePathPart = "report-storage-server" + File.separator + "config.txt";
 	
@@ -31,6 +34,13 @@ public class SecurityFilter implements Filter
     {
     }
  
+    /**
+     * Если клиент пытается получить доступ к несуществующей странице,
+     * отправляет соответствующее сообщение об ошибке.
+     * Если клиент неавторизован, в случае попытки загрузить файла на 
+     * сервер отправляет ошибку 401, а в случае попытки просмотреть файлы
+     * для скачивания перенаправляет на страницу авторизации.
+     */
     @Override
     public void doFilter (ServletRequest a_request, ServletResponse a_response, FilterChain a_chain) throws IOException, ServletException 
     {
@@ -66,7 +76,7 @@ public class SecurityFilter implements Filter
         	{
         		if (request.getMethod().equals("POST"))
         		{
-        			if (!request.getHeader("Authorization").equals(getToken(RECEIVING_TOKEN)))
+        			if (!request.getHeader("Authorization").equals(getToken(UPLOADING_TOKEN)))
         			{
         				   response.sendError(401, "Unauthorized");
         				   return;
@@ -89,13 +99,21 @@ public class SecurityFilter implements Filter
     	
     }
     
+    /**
+     * @param a_tokenType
+     * 		  Тип токена (UPLOADING_TOKEN - для загрузки файла или
+     *        адреса почты на сервер, DOWNLOADING_TOKEN - для
+     *        просмотра и скачивания файлов)
+     * @return токен
+     * @throws IOException
+     */
     public static String getToken (int a_tokenType) throws IOException
     {
     	try (FileInputStream in = new FileInputStream (System.getProperty("user.home") + File.separator + m_configFilePathPart);
    		     BufferedReader reader = new BufferedReader(new InputStreamReader(in)))
    		{
    			String token = reader.readLine();
-   			if (a_tokenType == SENDING_TOKEN) token = reader.readLine();
+   			if (a_tokenType == DOWNLOADING_TOKEN) token = reader.readLine();
    			
    			token = AppUtil.getSubstringToCharacter(token, '/');
    			token = AppUtil.getSubstringToCharacter(token, '\t');

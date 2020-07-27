@@ -12,6 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import report.actions.util.AppUtil;
 
+/**
+ * Сервлет для обработки запросов загрузки старого и нового
+ * значений адреса электронной почты пользователя на сервер.
+ */
 @WebServlet("/email")
 public class EmailUpdatingServlet extends HttpServlet 
 {
@@ -22,6 +26,11 @@ public class EmailUpdatingServlet extends HttpServlet
 		super();
 	}
 	 
+	/**
+	 * Если папка, соответствующая старому значению email, существует,
+	 * она переименовывается в новое значение email. Если не существует,
+	 * создаётся папка с именем, равным новому значению email.
+	 */
 	@Override
 	protected void doPost (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException, NumberFormatException 
 	{

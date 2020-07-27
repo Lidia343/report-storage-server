@@ -6,8 +6,14 @@ import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Comparator;
 
+/**
+ * Компаратор для сортировки файлов по дате создания (новые - в начале).
+ */
 public class FileListSorter implements Comparator<File> 
 {
+	/**
+	 * Сравнивает время создания первого файла и второго.
+	 */
 	@Override
 	public int compare(File a_f1, File a_f2) 
 	{

@@ -9,6 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
  
+/**
+ * Сервлет для перенаправления клиента на главную страницу
+ * /WEB-INF/views/mainView.jsp.
+ */
 @WebServlet({"/", "/main"})
 public class MainServlet extends HttpServlet 
 {

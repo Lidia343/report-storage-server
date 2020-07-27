@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
  
+/**
+ * Сервлет для обработки запросов аннулирования текущей сессии.
+ */
 @WebServlet("/unauth")
 public class UnauthorizationServlet extends HttpServlet 
 {

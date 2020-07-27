@@ -15,6 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 import report.actions.comp.FileListSorter;
 import report.actions.util.AppUtil;
  
+/**
+ * Сервлет для обработки запросов просмотра архивов
+ * на сервере.
+ */
 @WebServlet("/file")
 public class FileViewServlet extends HttpServlet 
 {

@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import report.actions.util.AppUtil;
 
+/**
+ * Сервлет для обработки запросов скачивания файла с сервера.
+ */
 @WebServlet("/file/download")
 public class FileDownloadingServlet extends HttpServlet 
 {
@@ -24,6 +27,10 @@ public class FileDownloadingServlet extends HttpServlet
 	      super();
 	   }
 	 
+
+       /**
+	   * Передаёт клиенту выбранный им файл.
+	   */
 	   @Override
 	   protected void doGet (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException 
 	   {

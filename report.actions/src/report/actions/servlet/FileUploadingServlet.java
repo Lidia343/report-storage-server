@@ -22,6 +22,10 @@ import javax.servlet.http.HttpServletResponse;
 import report.actions.comp.FileListSorter;
 import report.actions.util.AppUtil;
  
+/**
+ * Сервлет для обработки запросов загрузки файла
+ * на сервер.
+ */
 @WebServlet("/file/upload")
 public class FileUploadingServlet extends HttpServlet 
 {
@@ -60,7 +64,7 @@ public class FileUploadingServlet extends HttpServlet
 			   size--;
 		   }
 	   }
-	     
+	   
 	   String archivePath = m_archivePath + File.separator + m_email;
 	   new File(archivePath).mkdir();
 	   
@@ -74,6 +78,12 @@ public class FileUploadingServlet extends HttpServlet
 	   }
    }
    
+   /**
+    * Проверяет запрос клиента.
+     * @param a_request
+     * 		  Запрос
+     * @return входной поток запроса для чтения
+    */
    private ByteArrayInputStream checkRequestAndGetInputStream (HttpServletRequest a_request) throws IOException
    {
 	   ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -108,7 +118,7 @@ public class FileUploadingServlet extends HttpServlet
 				   ZipEntry entry = zin.getNextEntry();
 				   while (entry != null)
 				   {  
-					   if (!AppUtil.readNextZipEntry(zin)) return null;
+					   if (!AppUtil.readNextZipEntry(zin, AppUtil.MAX_UNCOMPRESSED_ENTRY_SIZE)) return null;
 					   
 					   long compSize = entry.getCompressedSize();
 					   long uncompSize = entry.getSize();
