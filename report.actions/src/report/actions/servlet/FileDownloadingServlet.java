@@ -64,6 +64,9 @@ public class FileDownloadingServlet extends HttpServlet
 			   return;
 		   }
 		   
+		   a_response.setContentType("application/zip");
+	       a_response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+		   
 	       try (ServletOutputStream out = a_response.getOutputStream(); 
 	    		InputStream in = new FileInputStream(archivePath + File.separator + fileName))
 	       {
@@ -73,8 +76,6 @@ public class FileDownloadingServlet extends HttpServlet
 		       {
 		    	   out.write(buffer, 0, length);
 		       }
-		       a_response.setContentType("application/zip");
-		       a_response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
 		       out.flush();
 	       }
 	   }
