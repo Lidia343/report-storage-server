@@ -23,12 +23,21 @@ public class AuthorizationServlet extends HttpServlet
         super();
     }
  
+    /**
+     * Перенаправляет на страницу авторизации.
+     */
     @Override
     protected void doGet (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException 
     {
     	doForward(a_request, a_response, "/WEB-INF/views/authorizationView.html");
     }
  
+    /**
+     * Проверяет токен, введённый пользователем, с установленным
+     * токеном. Если они не совпадают, перенаправляет на страницу
+     * авторизации с сообщением об ошибке. Если совпадают, то
+     * сохраняет введённый токен в текущей сессии.
+     */
     @Override
     protected void doPost (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException
     {
@@ -43,6 +52,12 @@ public class AuthorizationServlet extends HttpServlet
         
         TokenStorage.INSTANCE.storeToken(a_request.getSession(), clientSendingToken);
  
+        /*Если пользователь был переведён на страницу авторизации
+        с параметром "redirect", после успешной авторизации
+        происходит перенаправление на защищённую страницу, к 
+        которой пытался получить доступ пользователь. Если 
+        параметр "redirect" равен null, происходит перенаправление на
+        главную страницу:*/
         String redirect = (String) a_request.getSession().getAttribute("redirect");
         String contextPath = ((HttpServletRequest)a_request).getContextPath();
         if (redirect != null)  a_response.sendRedirect(contextPath + "/" + redirect);
@@ -56,7 +71,7 @@ public class AuthorizationServlet extends HttpServlet
      * @param a_response
      * 		  Ответ
      * @param a_jspPath
-     * 		  Путь к jsp-странице
+     * 		  Путь к html-странице
      * @throws ServletException
      * @throws IOException
      */

@@ -32,6 +32,9 @@ public class FileUploadingServlet extends HttpServlet
       m_archivePath = AppUtil.getReportArchivePath();
    }
    
+   /**
+    *  Загружает файл на сервер.
+ 	*/
    @Override
    protected void doPost (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException, NumberFormatException 
    {
@@ -40,6 +43,7 @@ public class FileUploadingServlet extends HttpServlet
 	   String email = AppUtil.getStringFromInputStream(in);
 	   String archiveName = AppUtil.getStringFromInputStream(in);
 	   
+	   //Проверка полученных имени файла и адреса электронной почты:
 	   if (!AppUtil.checkEmail(email) || !archiveName.equals("report.zip"))
 	   {
 		   a_response.sendError(400, "Bad request");
@@ -48,6 +52,8 @@ public class FileUploadingServlet extends HttpServlet
 	   
 	   List<File> files = AppUtil.getAllArchives(m_archivePath);
 	   int size = files.size();
+	   /*Если количество архивов больше установленного,
+	     происходит удаление файлов для */
 	   if (size >= AppUtil.MAX_ARCHIVE_COUNT)
 	   {
 		   Collections.sort(files, new FileListSorter());
