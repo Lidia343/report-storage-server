@@ -14,6 +14,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import jetty.reports.actions.util.AppUtil;
  
@@ -68,7 +69,8 @@ public class SecurityFilter implements Filter
         
         if (servletPath.contains("/file") || servletPath.equals("/email"))
         {
-        	String sendingToken = TokenStorage.INSTANCE.getToken(request.getSession());
+        	HttpSession session = request.getSession();
+        	String sendingToken = TokenStorage.INSTANCE.getToken(session);
         	if (sendingToken == null)
         	{
         		if (request.getMethod().equals("POST"))
@@ -81,7 +83,7 @@ public class SecurityFilter implements Filter
         		}
         		if (request.getMethod().equals("GET") && !servletPath.equals("/email"))
 	            {
-        			request.getSession().setAttribute("redirect", servletPath.substring(1, servletPath.length()));
+        			session.setAttribute("redirect", servletPath.substring(1, servletPath.length()));
 	                response.sendRedirect(request.getContextPath() + "/auth?redirect=" + 
 	                                      servletPath.substring(1, servletPath.length()));
 	                return;
