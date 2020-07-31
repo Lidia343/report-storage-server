@@ -53,6 +53,7 @@
   <servlet-mapping>
      <servlet-name>mainServlet</servlet-name>
      <url-pattern>/main</url-pattern>
+     
   </servlet-mapping>
   
   <servlet-mapping>

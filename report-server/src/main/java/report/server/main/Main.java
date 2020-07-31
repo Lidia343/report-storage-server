@@ -1,6 +1,7 @@
 package report.server.main;
 
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 /**
@@ -19,12 +20,10 @@ public class Main
 		Server server = new Server(8080);
 		
 		WebAppContext webAppContext = new WebAppContext();
-		webAppContext.setParentLoaderPriority(true);
+		webAppContext.setBaseResource(Resource.newClassPathResource("webapp", true, true));
 		webAppContext.setContextPath("/");
-		webAppContext.setExtractWAR(true);    
-		webAppContext.setWar("src/main/webapp");
-		server.setHandler(webAppContext);
 		
+		server.setHandler(webAppContext);
 		try
 		{
 			server.start();

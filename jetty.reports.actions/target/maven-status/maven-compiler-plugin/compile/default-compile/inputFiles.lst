@@ -1,0 +1,12 @@
+D:\git\report-storage-server\jetty.reports.actions\src\main\java\report\server\servlet\AuthorizationServlet.java
+D:\git\report-storage-server\jetty.reports.actions\src\main\java\report\server\main\Main.java
+D:\git\report-storage-server\jetty.reports.actions\src\main\java\report\server\servlet\FileUploadingServlet.java
+D:\git\report-storage-server\jetty.reports.actions\src\main\java\report\server\servlet\MainServlet.java
+D:\git\report-storage-server\jetty.reports.actions\src\main\java\report\server\servlet\UnauthorizationServlet.java
+D:\git\report-storage-server\jetty.reports.actions\src\main\java\report\server\servlet\FileDownloadingServlet.java
+D:\git\report-storage-server\jetty.reports.actions\src\main\java\report\server\servlet\FileViewServlet.java
+D:\git\report-storage-server\jetty.reports.actions\src\main\java\report\server\security\TokenStorage.java
+D:\git\report-storage-server\jetty.reports.actions\src\main\java\report\server\servlet\EmailUpdatingServlet.java
+D:\git\report-storage-server\jetty.reports.actions\src\main\java\report\server\comp\FileListSorter.java
+D:\git\report-storage-server\jetty.reports.actions\src\main\java\report\server\security\SecurityFilter.java
+D:\git\report-storage-server\jetty.reports.actions\src\main\java\report\server\util\AppUtil.java
