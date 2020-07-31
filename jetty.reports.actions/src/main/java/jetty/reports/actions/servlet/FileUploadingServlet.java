@@ -26,14 +26,23 @@ public class FileUploadingServlet extends HttpServlet
    
    private String m_archivePath = "";
  
-   public FileUploadingServlet () throws IOException 
+  /**
+   * Вызывает конструктор класса HttpServlet и
+   * устанавливает путь к папке, в которой
+   * находятся папки с архивами.
+   * @throws IOException
+   */
+   public FileUploadingServlet ()
    {
       super();
       m_archivePath = AppUtil.getReportArchivePath();
    }
    
    /**
-    *  Загружает файл на сервер.
+    * Если если имя файла и email пользователя
+    * корректны, а сам файл соответствует
+    * расширению ".zip" и проходит проверку на
+    * размер, метод загружает его на сервер.
  	*/
    @Override
    protected void doPost (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException, NumberFormatException 
@@ -52,8 +61,10 @@ public class FileUploadingServlet extends HttpServlet
 	   
 	   List<File> files = AppUtil.getAllArchives(m_archivePath);
 	   int size = files.size();
-	   /*Если количество архивов больше установленного,
-	     происходит удаление файлов для */
+	   
+	   /*Если количество архивов больше заданного,
+	     происходит удаление файлов до установленного
+	     количества:*/
 	   if (size >= AppUtil.MAX_ARCHIVE_COUNT)
 	   {
 		   Collections.sort(files, new FileListSorter());
@@ -69,8 +80,9 @@ public class FileUploadingServlet extends HttpServlet
 	   
 	   archiveName = "report (" + AppUtil.getCurrentDateAndTime() + ").zip";
 	   File archive = new File (archivePath + File.separator + archiveName);
-	   archive.createNewFile();
+	   archive.createNewFile(); //Создание пустого архива
 	   
+	   //Запись переданного файла в архив:
 	   try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(archive)))
 	   {
 		   AppUtil.writeInputStreamToOutputStream(in, out, AppUtil.MAX_ARCHIVE_SIZE, true);

@@ -16,19 +16,31 @@ import jetty.reports.actions.util.AppUtil;
  
 /**
  * Сервлет для обработки запросов просмотра файлов,
- * которые находятся на сервере.
+ * доступных для скачивания.
  */
 public class FileViewServlet extends HttpServlet 
 {
    private static final long serialVersionUID = 1L;
    private String m_archivePath = "";
  
-   public FileViewServlet () throws IOException 
+  /**
+   * Вызывает конструктор класса HttpServlet и
+   * устанавливает путь к папке, в которой
+   * находятся папки с архивами.
+   * @throws IOException
+   */
+   public FileViewServlet () 
    {
       super();
       m_archivePath = AppUtil.getReportArchivePath();
    }
    
+  /**
+    * Отправляет клиенту html-страницу со списком
+    * доступных для скачивания файлов, если они
+    * существуют. Если файлы не найдены, отправляет
+    * html-страницу с соответствующим сообщением.
+    */
    @Override
    protected void doGet (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException 
    {
@@ -57,6 +69,7 @@ public class FileViewServlet extends HttpServlet
 			   {
 				   String email = f.getParentFile().getName();
 				   String fileName = f.getName();
+				   
 				   out.println("\t\t<form action='" + a_request.getRequestURL() + "/download" + "' method = 'get' enctype = 'multipart/form-data'>");
 				   out.println("\t\t<input type = 'hidden' name = 'email' value = '" + email + "'/>");
 				   out.println("\t\t<input type = 'hidden' name = 'file' value = '" + fileName + "'/>");

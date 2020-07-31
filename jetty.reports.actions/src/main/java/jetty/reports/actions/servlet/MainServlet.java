@@ -9,8 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
  
 /**
- * Сервлет для перенаправления клиента на главную страницу
- * /WEB-INF/views/mainView.html.
+ * Сервлет для перенаправления клиента на главную страницу.
  */
 public class MainServlet extends HttpServlet 
 {
@@ -21,6 +20,9 @@ public class MainServlet extends HttpServlet
         super();
     }
  
+    /**
+     * Перенапрвляет на главную страницу страницу /WEB-INF/views/mainView.html.
+     */
     @Override
     protected void doGet (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException 
     {
@@ -28,6 +30,9 @@ public class MainServlet extends HttpServlet
         dispatcher.forward(a_request, a_response);
     }
  
+    /**
+     * Выполняет метод "GET".
+     */
     @Override
     protected void doPost (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException 
     {

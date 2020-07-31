@@ -33,7 +33,7 @@ public class AuthorizationServlet extends HttpServlet
     }
  
     /**
-     * Проверяет токен, введённый пользователем, с установленным
+     * Сравнивает токен, введённый пользователем, с установленным
      * токеном. Если они не совпадают, перенаправляет на страницу
      * авторизации с сообщением об ошибке. Если совпадают, то
      * сохраняет введённый токен в текущей сессии.
@@ -56,8 +56,8 @@ public class AuthorizationServlet extends HttpServlet
         с параметром "redirect", после успешной авторизации
         происходит перенаправление на защищённую страницу, к 
         которой пытался получить доступ пользователь. Если 
-        параметр "redirect" равен null, происходит перенаправление на
-        главную страницу:*/
+        параметр "redirect" равен null, происходит перенаправление
+        на главную страницу:*/
         String redirect = (String) a_request.getSession().getAttribute("redirect");
         String contextPath = ((HttpServletRequest)a_request).getContextPath();
         if (redirect != null)  a_response.sendRedirect(contextPath + "/" + redirect);

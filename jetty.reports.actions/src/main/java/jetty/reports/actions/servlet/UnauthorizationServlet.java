@@ -18,7 +18,10 @@ public class UnauthorizationServlet extends HttpServlet
     {
         super();
     }
- 
+    
+    /**
+     * Аннулирует сессию и перенаправляет на страницу авторизации.
+     */
     @Override
     protected void doGet (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException 
     {
@@ -26,6 +29,9 @@ public class UnauthorizationServlet extends HttpServlet
         a_response.sendRedirect(a_request.getContextPath() + "/auth");
     }
  
+    /**
+     *	Выполняет метод "GET".
+     */
     @Override
     protected void doPost (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException 
     {
