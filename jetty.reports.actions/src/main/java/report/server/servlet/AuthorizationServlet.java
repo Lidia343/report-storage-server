@@ -1,4 +1,4 @@
-package jetty.reports.actions.servlet;
+package report.server.servlet;
 
 import java.io.IOException;
 
@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import jetty.reports.actions.security.SecurityFilter;
-import jetty.reports.actions.security.TokenStorage;
+import report.server.security.SecurityFilter;
+import report.server.security.TokenStorage;
  
 /**
  * Сервлет для обработки запросов авторизации.

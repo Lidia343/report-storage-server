@@ -1,4 +1,4 @@
-package jetty.reports.actions.comp;
+package report.server.comp;
 
 import java.io.File;
 import java.io.IOException;

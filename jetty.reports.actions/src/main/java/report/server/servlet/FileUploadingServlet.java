@@ -1,4 +1,4 @@
-package jetty.reports.actions.servlet;
+package report.server.servlet;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import jetty.reports.actions.comp.FileListSorter;
-import jetty.reports.actions.util.AppUtil;
+import report.server.comp.FileListSorter;
+import report.server.util.AppUtil;
  
 /**
  * Сервлет для обработки запросов загрузки файла

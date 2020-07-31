@@ -1,4 +1,4 @@
-package jetty.reports.actions.servlet;
+package report.server.servlet;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import jetty.reports.actions.util.AppUtil;
+import report.server.util.AppUtil;
 
 /**
  * Сервлет для обработки запросов скачивания файла с сервера.

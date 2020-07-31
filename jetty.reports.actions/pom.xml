@@ -2,7 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>server</groupId>
-  <artifactId>jetty.reports.actions</artifactId>
+  <artifactId>report-server</artifactId>
   <packaging>war</packaging>
   <version>0.0.1-SNAPSHOT</version>
   <name>jetty Maven Webapp</name>
@@ -29,7 +29,7 @@
   </dependencies>
   
   <build>
-    <finalName>jetty.reports.actions</finalName>
+    <finalName>report-server</finalName>
     
     <plugins>
     	<plugin>
@@ -40,7 +40,7 @@
     		<configuration>
     			<scanIntervalSeconds>10</scanIntervalSeconds>
                 <webApp>
-                    <contextPath>/reports.actions/</contextPath>
+                    <contextPath>/</contextPath>
                 </webApp>
     		</configuration>
     		

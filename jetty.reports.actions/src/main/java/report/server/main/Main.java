@@ -1,4 +1,4 @@
-package jetty.reports.actions.main;
+package report.server.main;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
@@ -6,7 +6,7 @@ import org.eclipse.jetty.webapp.WebAppContext;
 /**
  * Главный класс приложения, содержащий точку входа в программу.
  */
-public class Main 
+public class Main
 {
 	/**
 	 * Точка входа в программу.
@@ -20,7 +20,7 @@ public class Main
 		
 		WebAppContext webAppContext = new WebAppContext();
 		webAppContext.setParentLoaderPriority(true);
-		webAppContext.setContextPath("/reports.actions/");
+		webAppContext.setContextPath("/");
 		webAppContext.setExtractWAR(true);    
 		webAppContext.setWar("src/main/webapp");
 		server.setHandler(webAppContext);

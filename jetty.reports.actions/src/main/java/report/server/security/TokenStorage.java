@@ -1,4 +1,4 @@
-package jetty.reports.actions.security;
+package report.server.security;
 
 import javax.servlet.http.HttpSession;
 

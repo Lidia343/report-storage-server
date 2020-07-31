@@ -3,11 +3,11 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
- <display-name>jetty.reports.actions</display-name>
+ <display-name>report-server</display-name>
   
  <filter>
    <filter-name>securityFilter</filter-name>
-   <filter-class>jetty.reports.actions.security.SecurityFilter</filter-class>
+   <filter-class>report.server.security.SecurityFilter</filter-class>
  </filter>
   
   <filter-mapping>
@@ -17,37 +17,37 @@
   
   <servlet>
     <servlet-name>mainServlet</servlet-name>
-    <servlet-class>jetty.reports.actions.servlet.MainServlet</servlet-class>
+    <servlet-class>report.server.servlet.MainServlet</servlet-class>
   </servlet>
 	   
   <servlet>
     <servlet-name>authServlet</servlet-name>
-    <servlet-class>jetty.reports.actions.servlet.AuthorizationServlet</servlet-class>
+    <servlet-class>report.server.servlet.AuthorizationServlet</servlet-class>
   </servlet>
   
   <servlet>
   	<servlet-name>unauthServlet</servlet-name>
-  	<servlet-class>jetty.reports.actions.servlet.UnauthorizationServlet</servlet-class>
+  	<servlet-class>report.server.servlet.UnauthorizationServlet</servlet-class>
   </servlet>
   
   <servlet>
   	<servlet-name>fileViewServlet</servlet-name>
-  	<servlet-class>jetty.reports.actions.servlet.FileViewServlet</servlet-class>
+  	<servlet-class>report.server.servlet.FileViewServlet</servlet-class>
   </servlet>
   
   <servlet>
   	<servlet-name>fileUploadingServlet</servlet-name>
-  	<servlet-class>jetty.reports.actions.servlet.FileUploadingServlet</servlet-class>
+  	<servlet-class>report.server.servlet.FileUploadingServlet</servlet-class>
   </servlet>
   
    <servlet>
   	<servlet-name>fileDownloadingServlet</servlet-name>
-  	<servlet-class>jetty.reports.actions.servlet.FileDownloadingServlet</servlet-class>
+  	<servlet-class>report.server.servlet.FileDownloadingServlet</servlet-class>
   </servlet>
   
   <servlet>
   	<servlet-name>emailUpdatingServlet</servlet-name>
-  	<servlet-class>jetty.reports.actions.servlet.EmailUpdatingServlet</servlet-class>
+  	<servlet-class>report.server.servlet.EmailUpdatingServlet</servlet-class>
   </servlet>
   
   <servlet-mapping>

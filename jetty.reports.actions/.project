@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>jetty.reports.actions</name>
+	<name>report-server</name>
 	<comment></comment>
 	<projects>
 	</projects>
