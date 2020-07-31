@@ -17,11 +17,11 @@ public class Main
 	public static void main(String[] args) throws Exception 
 	{
 		Server server = new Server(8080);
-
+		
 		WebAppContext webAppContext = new WebAppContext();
 		webAppContext.setParentLoaderPriority(true);
 		webAppContext.setContextPath("/reports.actions/");
-		webAppContext.setExtractWAR( true );    
+		webAppContext.setExtractWAR(true);    
 		webAppContext.setWar("src/main/webapp");
 		server.setHandler(webAppContext);
 		
