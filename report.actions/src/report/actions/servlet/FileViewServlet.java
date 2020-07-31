@@ -16,8 +16,8 @@ import report.actions.comp.FileListSorter;
 import report.actions.util.AppUtil;
  
 /**
- * Сервлет для обработки запросов просмотра архивов
- * на сервере.
+ * Сервлет для обработки запросов просмотра файлов,
+ * доступных для скачивания.
  */
 @WebServlet("/file")
 public class FileViewServlet extends HttpServlet 
@@ -25,12 +25,23 @@ public class FileViewServlet extends HttpServlet
    private static final long serialVersionUID = 1L;
    private String m_archivePath = "";
  
-   public FileViewServlet () throws IOException 
+   /**
+    * Вызывает конструктор класса HttpServlet и
+    * устанавливает путь к папке, в которой
+    * находятся папки с архивами.
+    */
+   public FileViewServlet () 
    {
       super();
       m_archivePath = AppUtil.getReportArchivePath();
    }
    
+   /**
+    * Отправляет клиенту html-страницу со списком
+    * доступных для скачивания файлов, если они
+    * существуют. Если файлы не найдены, отправляет
+    * html-страницу с соответствующим сообщением.
+    */
    @Override
    protected void doGet (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException 
    {

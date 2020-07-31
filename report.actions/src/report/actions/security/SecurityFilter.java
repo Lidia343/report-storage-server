@@ -19,7 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 import report.actions.util.AppUtil;
  
 /**
- * Фильтр для определения url, к которым может иметь доступ клиент.
+ * Фильтр, который проверяет каждый запрос, который должен быть
+ * обработан сервлетом.
  */
 @WebFilter("/*")
 public class SecurityFilter implements Filter 

@@ -43,7 +43,22 @@ public class AppUtil
  	   a_out.flush();
  	   return true;
     }
-      
+     
+    /**
+     * Читает следующее вложение архива и закрывает его.
+     * Метод должен быть использован после вызова метода
+     * ZipInputStream.getNextEntry().
+     * @param a_zin
+     * 		  Входной поток архива
+     * @param a_byteNumber
+     * 		  Количество байтов для чтения
+     * @return если количество прочитанных байтов 
+     * 		   больше a_byteNumber - false, иначе - true
+     * 		   (имеется незначительная неточность в подсчёте
+     * 		   считываемых байтов; она связана с размером
+     * 		   буфера для чтения (64 КБ)).
+     * @throws IOException
+     */
     public static boolean readNextZipEntry (ZipInputStream a_zin, long a_byteNumber) throws IOException
     {
     	long byteCount = 0;
@@ -64,7 +79,8 @@ public class AppUtil
     
     /**
      * Читает длину следующей строки из входного потока,
-     * затем читает следующую строку и возвращает её.
+     * затем читает следующую строку прочитанной длины и
+     * возвращает её.
      * @param a_in
      * 		  Входной поток
      * @return строку из входного потока
@@ -88,6 +104,11 @@ public class AppUtil
     	return result;
     }
     
+    /**
+     * @return путь к папке, в которой находятся папки 
+     * с архивами (содержит путь ко временной директории
+     * пользователя)
+     */
     public static String getReportArchivePath ()
     {
     	String path = System.getProperty("java.io.tmpdir") + File.separator + "reports";
@@ -174,8 +195,11 @@ public class AppUtil
 	}
     
     /**
-     * @param archivePath - путь к архивам
-     * @return все архивы во всех папках в директории a_archivePath
+     * @param a_archivePath
+     * 		  Путь к папке, которая содержит 
+     *        папки с архивами
+     * @return все архивы во всех папках в директории
+     * a_archivePath
      */
     public static List<File> getAllArchives (String a_archivePath)
     {

@@ -54,12 +54,16 @@ public class EmailUpdatingServlet extends HttpServlet
 		    File newReportDir = new File(newReportPath);
 		    if (reportDir.exists())
 		    {
-		    	reportDir.renameTo(newReportDir);
+		    	reportDir.renameTo(newReportDir); //Переименование папки
 		    }
+		    /*Создание новой папки в случае, когда папка, соответствующая
+		      старому адресу электронной почты, не была найдена:*/
 		    else newReportDir.mkdir();
 		}
 		else
 		{
+			/*Создание новой папки в случае, когда старый адрес электронной
+			  почты равен пустой строке:*/
 			reportDir = new File (newReportPath);
 			reportDir.mkdir();
 		}

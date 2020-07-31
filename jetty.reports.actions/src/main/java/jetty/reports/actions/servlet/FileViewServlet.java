@@ -27,7 +27,6 @@ public class FileViewServlet extends HttpServlet
    * Вызывает конструктор класса HttpServlet и
    * устанавливает путь к папке, в которой
    * находятся папки с архивами.
-   * @throws IOException
    */
    public FileViewServlet () 
    {

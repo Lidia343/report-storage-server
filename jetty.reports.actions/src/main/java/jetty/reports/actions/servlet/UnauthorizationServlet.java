@@ -20,7 +20,8 @@ public class UnauthorizationServlet extends HttpServlet
     }
     
     /**
-     * Аннулирует сессию и перенаправляет на страницу авторизации.
+     * Аннулирует текущую сессию и перенаправляет
+     * на страницу авторизации.
      */
     @Override
     protected void doGet (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException 
@@ -30,7 +31,7 @@ public class UnauthorizationServlet extends HttpServlet
     }
  
     /**
-     *	Выполняет метод "GET".
+     * Выполняет метод "GET".
      */
     @Override
     protected void doPost (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException 

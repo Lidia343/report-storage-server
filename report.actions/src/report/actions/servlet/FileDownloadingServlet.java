@@ -26,7 +26,6 @@ public class FileDownloadingServlet extends HttpServlet
 	   {
 	      super();
 	   }
-	 
 
        /**
 	   * Передаёт клиенту выбранный им файл.
@@ -43,6 +42,7 @@ public class FileDownloadingServlet extends HttpServlet
 		   boolean contain = false;
 		   if (fileName != null)
 		   {
+			   //Поиск в директории archiveDir файла с именем fileName:
 			   for (File f : archiveDir.listFiles())
 			   {
 				   if (fileName.equals(f.getName())) 
@@ -58,12 +58,13 @@ public class FileDownloadingServlet extends HttpServlet
 			   return;
 		   }
 		   
-		   if (!contain)
+		   if (!contain) //Если выбранный файл не был найден, отправляется ошибка 410:
 		   {
 			   a_response.sendError(410, "Gone");
 			   return;
 		   }
 		   
+		  //Отправка выбранного архива клиенту:
 		   a_response.setContentType("application/zip");
 	       a_response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
 		   

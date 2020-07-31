@@ -25,12 +25,21 @@ public class AuthorizationServlet extends HttpServlet
         super();
     }
  
+    /**
+     * Перенаправляет на страницу авторизации.
+     */
     @Override
     protected void doGet (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException 
     {
     	doForward(a_request, a_response, "/WEB-INF/views/authorizationView.jsp");
     }
  
+    /**
+     * Сравнивает токен, введённый пользователем, с установленным
+     * токеном. Если они не совпадают, перенаправляет на страницу
+     * авторизации с сообщением об ошибке. Если совпадают, то
+     * сохраняет введённый токен в текущей сессии.
+     */
     @Override
     protected void doPost (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException
     {
