@@ -28,7 +28,7 @@ public class SecurityFilter implements Filter
 	public static final int UPLOADING_TOKEN = 0;
 	public static final int DOWNLOADING_TOKEN = 1;
 	
-	private static final String m_configFilePathPart = "report-storage-server" + File.separator + "config.txt";
+	private static final String m_configFilePathPart = "report-server" + File.separator + "config.txt";
 	
     @Override
     public void destroy () 
