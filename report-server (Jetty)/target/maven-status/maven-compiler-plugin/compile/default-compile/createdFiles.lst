@@ -1,0 +1,16 @@
+report\server\servlet\UnauthorizationServlet.class
+report\server\security\config\DefaultConfiguration.class
+report\server\servlet\EmailUpdatingServlet.class
+report\server\util\AppUtil.class
+report\server\comp\FileListSorter.class
+report\server\security\TokenStorage.class
+report\server\servlet\FileUploadingServlet.class
+report\server\main\Main.class
+report\server\security\SecurityFilter.class
+report\server\servlet\FileDownloadingServlet.class
+report\server\servlet\FileViewServlet.class
+report\server\security\config\ConfigurationFile.class
+report\server\security\config\ConfigurationChecker.class
+report\server\servlet\MainServlet.class
+report\server\security\config\Configuration.class
+report\server\servlet\AuthorizationServlet.class
