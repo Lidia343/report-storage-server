@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import report.server.security.SecurityFilter;
 import report.server.security.TokenStorage;
+import report.server.security.config.ConfigurationFile;
  
 /**
  * Сервлет для обработки запросов авторизации.
@@ -41,16 +41,16 @@ public class AuthorizationServlet extends HttpServlet
     @Override
     protected void doPost (HttpServletRequest a_request, HttpServletResponse a_response) throws ServletException, IOException
     {
-        String clientSendingToken = a_request.getParameter("token");
-        String rightSendingToken = SecurityFilter.getToken(SecurityFilter.DOWNLOADING_TOKEN);
+        String clientDownloadingToken = a_request.getParameter("token");
+        String rightDownloadingToken = new ConfigurationFile().getConfiguration().getDownloadingToken();
         
-        if (!clientSendingToken.equals(rightSendingToken))
+        if (!clientDownloadingToken.equals(rightDownloadingToken))
         {
             doForward(a_request, a_response, "/WEB-INF/views/invalidTokenView.html");
             return;
         }
         
-        TokenStorage.INSTANCE.storeToken(a_request.getSession(), clientSendingToken);
+        TokenStorage.INSTANCE.storeToken(a_request.getSession(), clientDownloadingToken);
  
         /*Если пользователь был переведён на страницу авторизации
         с параметром "redirect", после успешной авторизации

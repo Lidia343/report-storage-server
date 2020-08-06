@@ -1,10 +1,6 @@
 package report.server.security;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -16,19 +12,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import report.server.util.AppUtil;
+import report.server.security.config.ConfigurationFile;
  
 /**
  * Фильтр, который проверяет каждый запрос, который должен быть
  * обработан сервлетом.
  */
 public class SecurityFilter implements Filter 
-{
-	public static final int UPLOADING_TOKEN = 0;
-	public static final int DOWNLOADING_TOKEN = 1;
-	
-	private static final String m_configFilePathPart = "report-storage-server" + File.separator + "config.txt";
-	
+{	
     @Override
     public void destroy () 
     {
@@ -70,12 +61,13 @@ public class SecurityFilter implements Filter
         if (servletPath.contains("/file") || servletPath.equals("/email"))
         {
         	HttpSession session = request.getSession();
-        	String sendingToken = TokenStorage.INSTANCE.getToken(session);
-        	if (sendingToken == null)
+        	String clientDownloadingToken = TokenStorage.INSTANCE.getToken(session);
+        	if (clientDownloadingToken == null)
         	{
         		if (request.getMethod().equals("POST"))
         		{
-        			if (!request.getHeader("Authorization").equals(getToken(UPLOADING_TOKEN)))
+        			String rightUploadingToken = new ConfigurationFile().getConfiguration().getUploadingToken();
+        			if (!request.getHeader("Authorization").equals(rightUploadingToken))
         			{
         				   response.sendError(401, "Unauthorized");
         				   return;
@@ -97,30 +89,5 @@ public class SecurityFilter implements Filter
     public void init (FilterConfig a_config) throws ServletException 
     {
     	
-    }
-    
-    /**
-     * @param a_tokenType
-     * 		  Тип токена (UPLOADING_TOKEN - для загрузки файла или
-     *        адреса почты на сервер, DOWNLOADING_TOKEN - для
-     *        просмотра и скачивания файлов)
-     * @return токен
-     * @throws IOException
-     */
-    public static String getToken (int a_tokenType) throws IOException
-    {
-    	try (FileInputStream in = new FileInputStream (System.getProperty("user.home") + File.separator + m_configFilePathPart);
-   		     BufferedReader reader = new BufferedReader(new InputStreamReader(in)))
-   		{
-   			String token = reader.readLine();
-   			if (a_tokenType == DOWNLOADING_TOKEN) token = reader.readLine();
-   			
-   			token = AppUtil.getSubstringToCharacter(token, '/');
-   			token = AppUtil.getSubstringToCharacter(token, '\t');
-   			token = AppUtil.getSubstringToCharacter(token, ' ');
-   			token = AppUtil.getSubstringToCharacter(token, System.lineSeparator().charAt(0));
-   			
-   			return token;
-   		}
     }
 }
