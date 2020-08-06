@@ -122,7 +122,7 @@ public class AppUtil
      */
     public static String getReportArchivePath ()
     {
-    	String path = System.getProperty("java.io.tmpdir") + File.separator + "reports";
+    	String path = System.getProperty("java.io.tmpdir") + File.separator + "report-server (reports)";
     	File archiveDir = new File(path);
     	archiveDir.mkdir();
     	return path;
