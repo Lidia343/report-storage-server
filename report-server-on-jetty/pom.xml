@@ -21,13 +21,13 @@
     <dependency>
     	<groupId>org.eclipse.jetty</groupId>
     	<artifactId>jetty-server</artifactId>
-    	<version>9.4.12.v20180830</version>
+    	<version>9.4.31.v20200723</version>
 	</dependency>
 	
 	<dependency>
     	<groupId>org.eclipse.jetty</groupId>
     	<artifactId>jetty-webapp</artifactId>
-    	<version>9.4.12.v20180830</version>
+    	<version>9.4.31.v20200723</version>
 	</dependency>
 	
 	<dependency>
@@ -65,7 +65,7 @@
     	<plugin>
     		<groupId>org.eclipse.jetty</groupId>
    			<artifactId>jetty-maven-plugin</artifactId>
-    		<version>9.4.12.v20180830</version>
+    		<version>9.4.31.v20200723</version>
     		
     		<configuration>
     			<scanIntervalSeconds>10</scanIntervalSeconds>
